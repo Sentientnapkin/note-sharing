@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
-import LoginScreen from './components/LoginScreen';
+import router from './router/router';
+import {RouterProvider} from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <LoginScreen />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

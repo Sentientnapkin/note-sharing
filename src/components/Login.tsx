@@ -1,8 +1,8 @@
 import {useRef} from "react";
-import { signIn, signUp } from "./firebaseFunctions"
+import { signIn } from "../firebase/firebaseFunctions"
 import {getAuth} from "firebase/auth";
 
-export default function LoginScreen() {
+export default function Login() {
   const auth = getAuth();
 
   const emailRef = useRef<HTMLInputElement>(null);
