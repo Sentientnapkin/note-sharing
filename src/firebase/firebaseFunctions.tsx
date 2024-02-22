@@ -1,4 +1,6 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { loginSuccess, logoutSuccess } from '../redux/slices/authSlice';
+import { store } from '../redux/store';
 import { auth } from "./firebaseSetup";
 
 export const signIn = (email: any, password: any) => {
@@ -6,6 +8,7 @@ export const signIn = (email: any, password: any) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
+      store.dispatch(loginSuccess(user));
       return user;
       // ...
     })
@@ -30,4 +33,13 @@ export const signUp = (email: any, password: any) => {
       const errorMessage = error.message;
       // ..
     });
+}
+
+export const logOut = () => {
+  signOut(auth).then(() => {
+    store.dispatch(logoutSuccess());
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
 }

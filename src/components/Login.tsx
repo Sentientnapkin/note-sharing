@@ -1,19 +1,16 @@
-import {useContext, useRef} from "react";
-import { signIn } from "../firebase/firebaseFunctions"
+import {useRef} from "react";
 import Form from 'react-bootstrap/Form';
-import {userContext} from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
+import {signIn} from "../firebase/firebaseFunctions";
 
 export default function Login() {
-  const { user, setUser } = useContext(userContext);
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    setUser(signIn(emailRef.current!.value, passwordRef.current!.value))
+    signIn(emailRef.current!.value, passwordRef.current!.value)
     navigate('/')
   }
 

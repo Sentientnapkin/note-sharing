@@ -1,19 +1,16 @@
 import React from 'react';
 import {signUp} from '../firebase/firebaseFunctions';
 import Form from 'react-bootstrap/Form';
-import { userContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  const { user, setUser } = React.useContext(userContext);
-
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
   const handleSignUp = () => {
-    setUser(signUp(emailRef.current!.value, passwordRef.current!.value))
+    signUp(emailRef.current!.value, passwordRef.current!.value)
     navigate('/')
   }
 
