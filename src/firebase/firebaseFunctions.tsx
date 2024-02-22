@@ -1,38 +1,42 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { loginSuccess, logoutSuccess } from '../redux/slices/authSlice';
 import { store } from '../redux/store';
 import { auth } from "./firebaseSetup";
 
-export const signIn = (email: any, password: any) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      store.dispatch(loginSuccess(user));
-      return user;
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
+export const signIn = async (email: any, password: any) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    // Signed in
+    const user = userCredential.user;
+    store.dispatch(loginSuccess(user));
+    return {
+      user: user,
+      error: ''
+    };
+  } catch (error: any) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    return {
+      user: null,
+      error: errorMessage
+    };
+  }
 }
 
-export const signUp = (email: any, password: any) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      const user = userCredential.user;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(r => {console.log(user)})
-
-      return user;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
+export const signUp = async (email: any, password: any) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Signed up
+    const user = userCredential.user;
+    return await signIn(email, password);
+  } catch (error: any) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    return {
+      user: null,
+      error: errorMessage
+    };
+  }
 }
 
 export const logOut = () => {
