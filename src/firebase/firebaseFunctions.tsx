@@ -1,14 +1,14 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { loginSuccess, logoutSuccess } from '../redux/slices/authSlice';
-import { store } from '../redux/store';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { auth } from "./firebaseSetup";
 
 export const signIn = async (email: any, password: any) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    // Signed in
+    const userCredential = await setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        return signInWithEmailAndPassword(auth, email, password);
+    })
+     // Signed in
     const user = userCredential.user;
-    store.dispatch(loginSuccess(user));
     return {
       user: user,
       error: ''
@@ -25,10 +25,16 @@ export const signIn = async (email: any, password: any) => {
 
 export const signUp = async (email: any, password: any) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        return createUserWithEmailAndPassword(auth, email, password);
+      })
     // Signed up
     const user = userCredential.user;
-    return await signIn(email, password);
+    return {
+      user: user,
+      error: ''
+    };
   } catch (error: any) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -41,7 +47,6 @@ export const signUp = async (email: any, password: any) => {
 
 export const logOut = () => {
   signOut(auth).then(() => {
-    store.dispatch(logoutSuccess());
     // Sign-out successful.
   }).catch((error) => {
     // An error happened.
