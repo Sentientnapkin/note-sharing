@@ -1,7 +1,8 @@
 import React from 'react';
+import styles from '../../styles/authentication.module.css';
 import {signUp} from '../../firebase/firebaseFunctions';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import {updateProfile} from "firebase/auth";
 import {auth} from "../../firebase/firebaseSetup";
@@ -40,32 +41,43 @@ export default function SignUp() {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Sign Up</h1>
-      <Form>
-        <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Username</Form.Label>
-          <Form.Control type="text" placeholder="Enter username" ref={usernameRef} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" ref={emailRef} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" ref={passwordRef} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="confirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control type="password" placeholder="Confirm password" ref={confirmPasswordRef} />
-        </Form.Group>
+      <div>
+        <TextField
+          id="username"
+          label="Username"
+          variant="outlined"
+          inputRef={usernameRef}
+          fullWidth
+        />
+        <TextField
+          id="email"
+          label="Email"
+          variant="outlined"
+          inputRef={emailRef}
+          fullWidth
+        />
+        <TextField
+          id="password"
+          label="Password"
+          variant="outlined"
+          inputRef={passwordRef}
+          type="password"
+          fullWidth
+        />
+        <TextField
+          id="confirmPassword"
+          label="Confirm Password"
+          variant="outlined"
+          inputRef={confirmPasswordRef}
+          type="password"
+          fullWidth
+        />
 
         <Button onClick={handleSignUp}>Sign Up</Button>
         <Button onClick={() => navigate('/login')}>Already have an account? Login Here</Button>
-      </Form>
+      </div>
       { error!== "" && <AuthErrorMessage message = {error}/> }
     </div>
   );
