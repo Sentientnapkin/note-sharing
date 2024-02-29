@@ -4,3 +4,21 @@
     align-items: center;
     justify-content: center;
 }
+.textFieldContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.textField {
+    margin: 10px 0;
+    width: 80%;
+}
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

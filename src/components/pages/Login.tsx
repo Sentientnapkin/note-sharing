@@ -3,10 +3,11 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import styles from '../../styles/authentication.module.css';
 import { useNavigate } from "react-router-dom";
-import {signIn} from "../../firebase/firebaseFunctions";
+import {signIn, googleSignIn} from "../../firebase/firebaseFunctions";
 import AuthErrorMessage from "../AuthErrorMessage";
 import {FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import GoogleSignInButton from "../GoogleSignInButton";
 
 export default function Login() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -33,20 +34,23 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <h1>Login</h1>
-      <div>
+      <div className={styles.textFieldContainer}>
         <TextField
           inputRef={emailRef}
           label="Email"
           variant="outlined"
           type="email"
           fullWidth
+          className={styles.textField}
         />
         <FormControl
           sx={{ m: 1, width: '25ch' }}
           variant="outlined"
+          className={styles.textField}
         >
           <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
+            inputRef={passwordRef}
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             endAdornment={
@@ -65,8 +69,11 @@ export default function Login() {
           />
         </FormControl>
 
-        <Button onClick={handleLogin}>Login</Button>
-        <Button onClick={() => navigate('/signup')}>Don't have an account? Sign Up Here</Button>
+        <div className={styles.buttonContainer}>
+          <Button onClick={handleLogin}>Login</Button>
+          <Button onClick={() => navigate('/signup')}>Don't have an account? Sign Up Here</Button>
+          <GoogleSignInButton />
+        </div>
       </div>
       { error!== "" && <AuthErrorMessage message = {error}/> }
     </div>

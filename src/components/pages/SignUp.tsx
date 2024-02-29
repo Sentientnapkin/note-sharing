@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import {updateProfile} from "firebase/auth";
 import {auth} from "../../firebase/firebaseSetup";
 import AuthErrorMessage from "../AuthErrorMessage";
+import GoogleSignInButton from "../GoogleSignInButton";
 
 export default function SignUp() {
   const usernameRef = React.useRef<HTMLInputElement>(null);
@@ -77,6 +78,7 @@ export default function SignUp() {
 
         <Button onClick={handleSignUp}>Sign Up</Button>
         <Button onClick={() => navigate('/login')}>Already have an account? Login Here</Button>
+        <GoogleSignInButton />
       </div>
       { error!== "" && <AuthErrorMessage message = {error}/> }
     </div>

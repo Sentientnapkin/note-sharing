@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 240px;
+    background-color: white;
+    border-radius: 3px;
+    color: #4285f4;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+container:hover {
+    background-color: #357ae8;
+}
+.icon {
+    margin-right: 10px;
+    height: 30px;
+    width: 30px;
+}
+.button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+}
+
