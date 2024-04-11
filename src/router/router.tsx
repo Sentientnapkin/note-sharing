@@ -4,6 +4,9 @@ import Home from "../components/pages/Home";
 import {getAuth} from "firebase/auth";
 import Login from "../components/pages/Login";
 import SignUp from "../components/pages/SignUp";
+import TopicNotes from "../components/pages/TopicNotes";
+import NotesView from "../components/pages/NotesView";
+import {Settings} from "@mui/icons-material";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +26,22 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignUp />,
+      },
+      {
+        path: "settings",
+        element: <Settings />
+      },
+      {
+        path: "topic/:topicId",
+        element: <TopicNotes />
+      },
+      {
+        path: "topic/:topicId/note/:noteId",
+        element: <NotesView />
+      },
+      {
+        path: "*",
+        element: <div>Not Found</div>,
       }
     ],
   },
