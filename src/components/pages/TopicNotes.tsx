@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 export default function TopicNotes() {
   const { topicId } = useParams();
   const [file, setFile] = useState<File | null>(null)
+  const [notes, setNotes] = useState<any[]>([])
 
   function handleUploadNote(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return
@@ -23,6 +24,7 @@ export default function TopicNotes() {
 
     // Fetch the first page of 100.
     const firstPage = await list(listRef, {maxResults: 30});
+    setNotes(firstPage.items);
 
     // Use the result.
     console.log(firstPage.items)
@@ -32,7 +34,7 @@ export default function TopicNotes() {
     // Fetch the second page if there are more elements.
     if (firstPage.nextPageToken) {
       const secondPage = await list(listRef, {
-        maxResults: 100,
+        maxResults: 30,
         pageToken: firstPage.nextPageToken,
       });
       // processItems(secondPage.items)
@@ -51,7 +53,12 @@ export default function TopicNotes() {
       <Input type="file" onChange={handleUploadNote} disableUnderline={true} inputProps={{accept:"application/pdf"}}/>
       <div>
         <h2>Notes</h2>
-
+        {notes.map(note => {
+          return (
+            <div key={note.name}>
+              <a href={note.fullPath} target="_blank" rel="noreferrer">{note.name}</a>
+            </div>
+          )})}
       </div>
     </div>
   );
