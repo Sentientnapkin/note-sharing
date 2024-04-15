@@ -3,9 +3,8 @@ import {useNavigate} from "react-router-dom";
 import { logOut } from '../../firebase/firebaseFunctions';
 import { onAuthStateChanged, User} from "firebase/auth";
 import {auth} from '../../firebase/firebaseSetup';
-import { FormControl, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import styles from '../../styles/home.module.css'
+import {Autocomplete, Button, TextField} from "@mui/material"
+import styles from "../../styles/home.module.css"
 
 
 export default function Home() {
@@ -26,6 +25,10 @@ export default function Home() {
     })
   }, []);
 
+  const handleGenericTopic = () => {
+    navigate('/topic/1');
+  }
+
   return (
     <div>
       <div className={styles.title}>
@@ -40,7 +43,8 @@ export default function Home() {
       </div>
       <p>Here you can find notes from your classmates, or share your own notes with others.</p>
       <p>Click on the "Notes" tab to get started.</p>
-      <button onClick={logOut}>Sign Out</button>
+      <Button onClick={handleGenericTopic}> To Generic Topic </Button>
+      <Button onClick={logOut}>Sign Out</Button>
     </div>
   );
 }
