@@ -3,7 +3,8 @@ import {useNavigate} from "react-router-dom";
 import { logOut } from '../../firebase/firebaseFunctions';
 import { onAuthStateChanged, User} from "firebase/auth";
 import {auth} from '../../firebase/firebaseSetup';
-import Button from '@mui/material/Button';
+import {Autocomplete, Button, TextField} from "@mui/material"
+import styles from "../../styles/home.module.css"
 
 
 export default function Home() {
@@ -30,7 +31,16 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome to Athenian High School's Note Sharing Website</h1>
+      <div className={styles.title}>
+        <h1>Hadrian's Library</h1>
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={classes}
+          sx={{ width: 900 }}
+          renderInput={(params) => <TextField {...params} label="Topic" />}
+        />
+      </div>
       <p>Here you can find notes from your classmates, or share your own notes with others.</p>
       <p>Click on the "Notes" tab to get started.</p>
       <Button onClick={handleGenericTopic}> To Generic Topic </Button>
@@ -38,3 +48,10 @@ export default function Home() {
     </div>
   );
 }
+const classes = [
+  {label: 'Computer Science'},
+  {label: 'Advanced Computer Science'},
+  {label: 'Computational Thinking'},
+  {label: 'Data Structures & Algorithms'},
+  {label: 'Software Engineering'},
+];
