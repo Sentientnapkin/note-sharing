@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import { Input } from '@mui/material';
-import { storage, auth } from '../../firebase/firebaseSetup';
-import { ref, uploadBytes, list } from "firebase/storage";
+import { storage } from '../../firebase/firebaseSetup';
+import { ref, uploadBytes, list, getDownloadURL } from "firebase/storage";
 import { useParams } from 'react-router-dom';
+import Button from "@mui/material/Button";
 
 export default function TopicNotes() {
   const { topicId } = useParams();
@@ -11,9 +12,16 @@ export default function TopicNotes() {
 
   function handleUploadNote(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return
+
     setFile(event.target.files[0])
     const storageRef = ref(storage, 'notes/' + topicId + '/' + event.target.files[0].name);
-    uploadBytes(storageRef, event.target.files[0]).then((snapshot) => {
+
+    const metadata = {
+      contentType: 'application/pdf',
+      timeCreated: new Date(event.target.files[0].lastModified),
+    }
+
+    uploadBytes(storageRef, event.target.files[0], metadata).then((snapshot) => {
       console.log('Uploaded a blob or file!');
     });
   }
@@ -42,6 +50,16 @@ export default function TopicNotes() {
     }
   }
 
+  function handleOpenPDF(fullPath: string) {
+    getDownloadURL(ref(storage, fullPath)).then((url) => {
+
+    }).catch((error) => {
+      // Handle any errors
+    });
+
+
+  }
+
   useEffect(() => {
     getNotes().then(r => console.log(r))
   }, [])
@@ -56,7 +74,9 @@ export default function TopicNotes() {
         {notes.map(note => {
           return (
             <div key={note.name}>
-              <a href={note.fullPath} target="_blank" rel="noreferrer">{note.name}</a>
+              <Button onClick={() => handleOpenPDF(note.fullPath)}>
+                {note.name}
+              </Button>
             </div>
           )})}
       </div>
