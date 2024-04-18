@@ -49,7 +49,7 @@ export default function Home() {
   }, []);
 
   const handleGenericTopic = () => {
-    navigate('/topic/1');
+    navigate('/Math');
   }
 
   return (

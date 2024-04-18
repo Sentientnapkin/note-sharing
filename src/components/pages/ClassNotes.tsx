@@ -2,19 +2,21 @@ import React, {useEffect, useState} from 'react';
 import { Input } from '@mui/material';
 import { storage } from '../../firebase/firebaseSetup';
 import { ref, uploadBytes, list, getDownloadURL } from "firebase/storage";
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
 
-export default function TopicNotes() {
-  const { topicId } = useParams();
+export default function ClassNotes() {
+  const { subject, classId } = useParams();
   const [file, setFile] = useState<File | null>(null)
   const [notes, setNotes] = useState<any[]>([])
+
+  const navigate= useNavigate()
 
   function handleUploadNote(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return
 
     setFile(event.target.files[0])
-    const storageRef = ref(storage, 'notes/' + topicId + '/' + event.target.files[0].name);
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + event.target.files[0].name);
 
     const metadata = {
       contentType: 'application/pdf',
@@ -28,7 +30,7 @@ export default function TopicNotes() {
 
   async function getNotes() {
     // get notes from firebase
-    const listRef = ref(storage, 'notes/' + topicId + '/');
+    const listRef = ref(storage, 'notes/' + subject + "/" + classId + "/");
 
     // Fetch the first page of 100.
     const firstPage = await list(listRef, {maxResults: 30});
@@ -50,31 +52,28 @@ export default function TopicNotes() {
     }
   }
 
-  function handleOpenPDF(fullPath: string) {
-    getDownloadURL(ref(storage, fullPath)).then((url) => {
-
-    }).catch((error) => {
-      // Handle any errors
-    });
-
-
+  async function handleOpenPDF(note: any) {
+    navigate( '/' + subject + '/' + classId + '/' + note.name)
   }
+
 
   useEffect(() => {
     getNotes().then(r => console.log(r))
   }, [])
 
+
   return (
     <div>
       <h1>Topic Notes</h1>
-      <h2> topicId: {topicId} </h2>
+      <h2> subject: {subject} </h2>
+      <h2> class: {classId} </h2>
       <Input type="file" onChange={handleUploadNote} disableUnderline={true} inputProps={{accept:"application/pdf"}}/>
       <div>
         <h2>Notes</h2>
         {notes.map(note => {
           return (
             <div key={note.name}>
-              <Button onClick={() => handleOpenPDF(note.fullPath)}>
+              <Button onClick={() => handleOpenPDF(note)}>
                 {note.name}
               </Button>
             </div>
