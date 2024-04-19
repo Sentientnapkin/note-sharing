@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {getDownloadURL, ref} from "firebase/storage";
-import {storage} from "../../firebase/firebaseSetup";
+import {storage} from "../firebase/firebaseSetup";
 import Button from "@mui/material/Button";
 
 export default function NotesView() {

@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import { logOut } from '../../firebase/firebaseFunctions';
+import { logOut } from '../firebase/firebaseFunctions';
 import { onAuthStateChanged, User} from "firebase/auth";
-import {auth} from '../../firebase/firebaseSetup';
+import {auth} from '../firebase/firebaseSetup';
 import {Autocomplete, Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField} from "@mui/material"
-import styles from "../../styles/home.module.css"
-import JoClassButton from "../joClassButton"
+import styles from "../styles/home.module.css"
+import JoClassButton from "../components/joClassButton"
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);

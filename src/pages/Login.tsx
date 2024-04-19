@@ -1,13 +1,13 @@
 import React, {useRef} from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import styles from '../../styles/authentication.module.css';
+import styles from '../styles/authentication.module.css';
 import { useNavigate } from "react-router-dom";
-import {signIn, googleSignIn} from "../../firebase/firebaseFunctions";
-import AuthErrorMessage from "../AuthErrorMessage";
+import {signIn, googleSignIn} from "../firebase/firebaseFunctions";
+import AuthErrorMessage from "../components/AuthErrorMessage";
 import {FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import GoogleSignInButton from "../GoogleSignInButton";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 export default function Login() {
   const emailRef = useRef<HTMLInputElement>(null);

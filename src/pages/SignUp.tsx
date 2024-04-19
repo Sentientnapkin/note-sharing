@@ -1,13 +1,13 @@
 import React from 'react';
-import styles from '../../styles/authentication.module.css';
-import {signUp} from '../../firebase/firebaseFunctions';
+import styles from '../styles/authentication.module.css';
+import {signUp} from '../firebase/firebaseFunctions';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import {updateProfile} from "firebase/auth";
-import {auth} from "../../firebase/firebaseSetup";
-import AuthErrorMessage from "../AuthErrorMessage";
-import GoogleSignInButton from "../GoogleSignInButton";
+import {auth} from "../firebase/firebaseSetup";
+import AuthErrorMessage from "../components/AuthErrorMessage";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 export default function SignUp() {
   const usernameRef = React.useRef<HTMLInputElement>(null);

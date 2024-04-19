@@ -1,6 +1,6 @@
 import {ComponentPreview, Previews} from "@react-buddy/ide-toolbox";
 import {PaletteTree} from "./palette";
-import SignUp from "../components/pages/SignUp";
+import SignUp from "../pages/SignUp";
 
 const ComponentPreviews = () => {
   return (
