@@ -2,13 +2,14 @@
   margin-top: 15px;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: '100%';
 }
 .pfp {
   width: 60px;
   height: 60px;
   border-radius: 30px;
+  margin: 15px;
 }
 .pfpButton {
   background-color: Transparent;
@@ -40,7 +41,7 @@
 }
 .classImage {
   width: 100%;
-  height: 70%;
+  height: 50%;
   object-fit: cover;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -50,4 +51,24 @@
   flex-direction: row;
   width: 100%;
   align-items: space-evenly;
+}
+.logo2 {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  margin: 15px;
+}
+.logoHolder {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+}
+.titleText {
+  font-size: 35px;
+  font-weight: bolder;
+  align-self: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+* {
+  color: black;
 }

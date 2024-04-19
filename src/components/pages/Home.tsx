@@ -13,7 +13,12 @@ export default function Home() {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-
+  const artDesc = "Art explores creative expression through various mediums such as painting, sculpture, and digital media. It encompasses aesthetics, history, and cultural significance, reflecting human experiences and emotions. Art education fosters creativity and innovation while nurturing individuality and cultural awareness. It offers a lens into diverse perspectives and societal narratives.";
+  const mathDesc = "Mathematics is the study of numbers, shapes, patterns, and structures. It involves logical reasoning and problem-solving, exploring concepts like algebra, geometry, calculus, and statistics. Math is fundamental in understanding the natural world, technology, and scientific phenomena. It provides tools for modeling and predicting patterns in various disciplines.";
+  const historyDesc = "History is the study of past events, societies, and civilizations through critical analysis of sources and narratives. It explores how societies evolve, conflicts arise, and cultures develop over time. By examining the past, historians seek to understand the complexities of human experience and its impact on shaping our present world."
+  const scienceDesc = "Science explores the natural world through observation, experimentation, and analysis. It encompasses various disciplines like biology, chemistry, physics, and more. Scientists seek to understand phenomena, formulate theories, and apply knowledge for practical purposes. Science drives innovation, technology, and our understanding of the universe, from atoms to galaxies."
+  const literatureDesc = "Literature is the study of written works created by individuals or groups, encompassing various genres like fiction, poetry, drama, and non-fiction. This academic subject explores themes, styles, and cultural contexts within literary texts, fostering critical analysis and interpretation. It examines how language, narrative, and symbolism convey meaning and reflect societal values.";
+  const languageDesc = "Foreign language studies explore languages spoken outside one's native tongue. It encompasses linguistic analysis, cultural context, and practical communication skills. Students delve into grammar, vocabulary, phonetics, and socio-cultural aspects to enhance cross-cultural understanding and global communication. These classes provide rich cultural experiences.";
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <img src={'./logo.png'} className={styles.logo1}></img>
@@ -48,14 +53,14 @@ export default function Home() {
     })
   }, []);
 
-  const handleGenericTopic = () => {
-    navigate('/Math');
-  }
-
   return (
     <div>
       <div className={styles.title}>
-        <h1>Hadrian's Library</h1>
+        <div className={styles.logoHolder}>
+          <img className={styles.logo2} src={"./logo.png"}></img>
+          <h1 className={styles.titleText}>Hadrian's Library</h1>
+        </div>
+        {/*
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -63,20 +68,21 @@ export default function Home() {
           sx={{ width: 900 }}
           renderInput={(params) => <TextField {...params} label="Topic" />}
         />
+        */}
         <button className={styles.pfpButton} onClick={toggleDrawer(true)}>
           <img src={"./defaultProfile.webp"} className={styles.pfp}>
           </img>
         </button>
       </div>
       <div className={styles.holder}>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"Art"}/>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"Math"}/>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"History"}/>
+        <JoClassButton oClick={() => {navigate('/Art');}} jClassName={"Art"} desc={artDesc}/>
+        <JoClassButton oClick={() => {navigate('/Math');}} jClassName={"Math"} desc={mathDesc}/>
+        <JoClassButton oClick={() => {navigate('/History');}} jClassName={"History"} desc={historyDesc}/>
       </div>
       <div className={styles.holder}>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"Science"}/>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"Literature"}/>
-        <JoClassButton oClick={handleGenericTopic} jClassName={"Language"}/>
+        <JoClassButton oClick={() => {navigate('/Science');}} jClassName={"Science"} desc={scienceDesc}/>
+        <JoClassButton oClick={() => {navigate('/Literature');}} jClassName={"Literature"} desc={literatureDesc}/>
+        <JoClassButton oClick={() => {navigate('/Language');}} jClassName={"Language"} desc={languageDesc}/>
       </div>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
