@@ -1,11 +1,12 @@
 import {createBrowserRouter} from "react-router-dom";
 import Layout from "../components/Layout";
-import Home from "../components/pages/Home";
+import Home from "../pages/Home";
 import {getAuth} from "firebase/auth";
-import Login from "../components/pages/Login";
-import SignUp from "../components/pages/SignUp";
-import TopicNotes from "../components/pages/TopicNotes";
-import NotesView from "../components/pages/NotesView";
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
+import SubjectPage from "../pages/SubjectPage";
+import ClassNotes from "../pages/ClassNotes";
+import NotesView from "../pages/NotesView";
 import {Settings} from "@mui/icons-material";
 
 const router = createBrowserRouter([
@@ -32,11 +33,15 @@ const router = createBrowserRouter([
         element: <Settings />
       },
       {
-        path: "topic/:topicId",
-        element: <TopicNotes/>
+        path: ":subject",
+        element: <SubjectPage />
       },
       {
-        path: "topic/:topicId/note/:noteId",
+        path: ":subject/:classId",
+        element: <ClassNotes/>
+      },
+      {
+        path: ":subject/:classId/:noteId",
         element: <NotesView />
       },
       {
