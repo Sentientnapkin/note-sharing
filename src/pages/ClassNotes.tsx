@@ -7,6 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
 import BackButton from "../components/BackButton";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 
 export default function ClassNotes() {
   const {subject, classId} = useParams();
@@ -15,11 +17,24 @@ export default function ClassNotes() {
   const [file, setFile] = useState<File | null>(null)
   const [notes, setNotes] = useState<any[]>([])
 
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
   function handleOpenPopup() {
     setUploadPopupOpen(true)
   }
 
   function handleClosePopup() {
+    setFile(null)
     setUploadPopupOpen(false)
   }
 
@@ -61,7 +76,9 @@ export default function ClassNotes() {
 
     const metadata = {
       contentType: 'application/pdf',
-      timeCreated: uploadDate
+      customMetadata: {
+        'classDate': uploadDate.toString().slice(0, 16),
+      },
     }
 
     uploadBytes(storageRef, file, metadata).then((snapshot) => {
@@ -90,7 +107,22 @@ export default function ClassNotes() {
       >
         <DialogTitle>Upload Note</DialogTitle>
         <DialogContent>
-          <input type="file" onChange={handleNoteInput}/>
+          <div>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+              color={"primary"}
+            >
+              Upload file
+              <VisuallyHiddenInput type="file" onChange={handleNoteInput}/>
+            </Button>
+            <p>
+              {file?.name}
+            </p>
+          </div>
         </DialogContent>
         <DialogContent>
           <DatePicker value={uploadDate} onChange={setUploadDate} />
