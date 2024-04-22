@@ -6,7 +6,7 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import SubjectPage from "../pages/SubjectPage";
 import ClassNotes from "../pages/ClassNotes";
-import NotesView from "../pages/NotesView";
+import NotePDFView from "../pages/NotePDFView";
 import {Settings} from "@mui/icons-material";
 
 const router = createBrowserRouter([
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       },
       {
         path: ":subject/:classId/:noteId",
-        element: <NotesView />
+        element: <NotePDFView />
       },
       {
         path: "*",

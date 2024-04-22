@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {Dialog, DialogActions, DialogContent, DialogTitle, Fab} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 import { storage } from '../firebase/firebaseSetup';
 import { ref, uploadBytes, list } from "firebase/storage";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
+import BackButton from "../components/BackButton";
 
 export default function ClassNotes() {
-  const { subject, classId } = useParams();
+  const {subject, classId} = useParams();
   const [uploadPopupOpen, setUploadPopupOpen] = useState<boolean>(false);
+  const [uploadDate, setUploadDate] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null)
   const [notes, setNotes] = useState<any[]>([])
 
@@ -20,7 +23,7 @@ export default function ClassNotes() {
     setUploadPopupOpen(false)
   }
 
-  const navigate= useNavigate()
+  const navigate = useNavigate()
 
   async function getNotes() {
     // get notes from firebase
@@ -46,17 +49,22 @@ export default function ClassNotes() {
     }
   }
 
-  function handleUploadNote(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files) return
+  function handleNoteInput (event: any) {
+    if (!event.target.files[0]) return
+    setFile(event.target.files[0])
+  }
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + event.target.files[0].name);
+  function handleUploadNote() {
+    if (file == null) return
+
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + file.name);
 
     const metadata = {
       contentType: 'application/pdf',
-      timeCreated: new Date(event.target.files[0].lastModified),
+      timeCreated: uploadDate
     }
 
-    uploadBytes(storageRef, event.target.files[0], metadata).then((snapshot) => {
+    uploadBytes(storageRef, file, metadata).then((snapshot) => {
       console.log('Uploaded a blob or file!');
     }).then(() => {
       handleClosePopup()
@@ -64,7 +72,7 @@ export default function ClassNotes() {
   }
 
   async function handleOpenPDF(note: any) {
-    navigate( '/' + subject + '/' + classId + '/' + note.name)
+    navigate('/' + subject + '/' + classId + '/' + note.name)
   }
 
 
@@ -82,13 +90,18 @@ export default function ClassNotes() {
       >
         <DialogTitle>Upload Note</DialogTitle>
         <DialogContent>
-          <input type="file" onChange={handleUploadNote} />
+          <input type="file" onChange={handleNoteInput}/>
+        </DialogContent>
+        <DialogContent>
+          <DatePicker value={uploadDate} onChange={setUploadDate} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClosePopup}>Cancel</Button>
-          <Button onClick={handleClosePopup}>Done</Button>
+          <Button onClick={handleUploadNote}>Upload</Button>
         </DialogActions>
       </Dialog>
+
+      <BackButton />
 
       <h1>Topic Notes</h1>
       <h2> subject: {subject} </h2>

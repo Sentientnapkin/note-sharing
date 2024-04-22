@@ -3,8 +3,9 @@ import {useParams} from "react-router-dom";
 import {getDownloadURL, ref} from "firebase/storage";
 import {storage} from "../firebase/firebaseSetup";
 import Button from "@mui/material/Button";
+import BackButton from "../components/BackButton";
 
-export default function NotesView() {
+export default function NotePDFView() {
   const { subject, classId, noteId} = useParams();
   const [pdfUrl, setPdfUrl] = useState<string | undefined>(undefined)
 
@@ -19,7 +20,7 @@ export default function NotesView() {
   return (
     <div>
       <div>
-        <Button onClick={() => window.history.back()}>Back</Button>
+        <BackButton />
         <h1>{noteId}</h1>
       </div>
       <div>
