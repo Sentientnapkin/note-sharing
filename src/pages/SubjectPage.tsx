@@ -5,6 +5,7 @@ import styles from "../styles/subject.module.css"
 import {list, ref, listAll} from "firebase/storage";
 import {storage} from "../firebase/firebaseSetup";
 import BackButton from "../components/BackButton";
+import ClassButton from "../components/ClassButton"
 export default function SubjectPage() {
   const { subject } = useParams();
   const [classes, setClasses] = React.useState<any[]>([])
@@ -43,9 +44,7 @@ export default function SubjectPage() {
         <h2>Classes</h2>
         {classes.map(c => {
           return (
-            <div>
-              <Button onClick={() => {navigate('/' + subject + '/' + c.name)}}>{c.name}</Button>
-            </div>
+            <ClassButton teacher={"Generic"} clas={c.name}/>
           )
         })}
       </div>
