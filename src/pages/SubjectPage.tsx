@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import Button from "@mui/material/Button";
-import styles from "../../styles/subject.module.css"
+import styles from "../styles/subject.module.css"
 export default function SubjectPage() {
   const { subject } = useParams();
 
