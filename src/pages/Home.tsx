@@ -5,7 +5,7 @@ import { onAuthStateChanged, User} from "firebase/auth";
 import {auth} from '../firebase/firebaseSetup';
 import {Autocomplete, Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField} from "@mui/material"
 import styles from "../styles/home.module.css"
-import JoClassButton from "../components/joClassButton"
+import ClassThumbnail from "../components/ClassThumbnail"
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);
@@ -75,14 +75,14 @@ export default function Home() {
         </button>
       </div>
       <div className={styles.holder}>
-        <JoClassButton oClick={() => {navigate('/Art');}} jClassName={"Art"} desc={artDesc}/>
-        <JoClassButton oClick={() => {navigate('/Math');}} jClassName={"Math"} desc={mathDesc}/>
-        <JoClassButton oClick={() => {navigate('/History');}} jClassName={"History"} desc={historyDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/Art');}} jClassName={"Art"} desc={artDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/Math');}} jClassName={"Math"} desc={mathDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/History');}} jClassName={"History"} desc={historyDesc}/>
       </div>
       <div className={styles.holder}>
-        <JoClassButton oClick={() => {navigate('/Science');}} jClassName={"Science"} desc={scienceDesc}/>
-        <JoClassButton oClick={() => {navigate('/Literature');}} jClassName={"Literature"} desc={literatureDesc}/>
-        <JoClassButton oClick={() => {navigate('/Language');}} jClassName={"Language"} desc={languageDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/Science');}} jClassName={"Science"} desc={scienceDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/Literature');}} jClassName={"Literature"} desc={literatureDesc}/>
+        <ClassThumbnail oClick={() => {navigate('/Language');}} jClassName={"Language"} desc={languageDesc}/>
       </div>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
