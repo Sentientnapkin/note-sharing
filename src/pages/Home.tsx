@@ -13,6 +13,7 @@ export default function Home() {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <img src={require('../images/logo.png')} className={styles.logo1}></img>
@@ -78,7 +79,7 @@ export default function Home() {
         <ClassThumbnail oClick={() => {navigate('/Literature');}} jClassName={"Literature"}/>
         <ClassThumbnail oClick={() => {navigate('/Language');}} jClassName={"Language"}/>
       </div>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor={'right'}>
         {DrawerList}
       </Drawer>
     </div>
