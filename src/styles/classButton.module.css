@@ -5,6 +5,9 @@
   flex-direction: column;
   border-radius: 10px;
 }
+.holder:hover {
+  background-color: lightgray;
+}
 .thumbnail {
   width: 100%;
   height: 50%;
