@@ -21,7 +21,7 @@ export default function Home() {
   const languageDesc = "Foreign language studies explore languages spoken outside one's native tongue. It encompasses linguistic analysis, cultural context, and practical communication skills. Students delve into grammar, vocabulary, phonetics, and socio-cultural aspects to enhance cross-cultural understanding and global communication. These classes provide rich cultural experiences.";
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-      <img src={'./logo.png'} className={styles.logo1}></img>
+      <img src={require('../images/logo.png')} className={styles.logo1}></img>
       <List>
         {['Account', 'Settings', 'Help'].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -57,7 +57,7 @@ export default function Home() {
     <div>
       <div className={styles.title}>
         <div className={styles.logoHolder}>
-          <img className={styles.logo2} src={"./logo.png"}></img>
+          <img className={styles.logo2} src={require("../images/logo.png")}></img>
           <h1 className={styles.titleText}>Hadrian's Library</h1>
         </div>
         {/*
@@ -70,7 +70,7 @@ export default function Home() {
         />
         */}
         <button className={styles.pfpButton} onClick={toggleDrawer(true)}>
-          <img src={"./defaultProfile.webp"} className={styles.pfp}>
+          <img src={require("../images/defaultProfile.webp")} className={styles.pfp}>
           </img>
         </button>
       </div>

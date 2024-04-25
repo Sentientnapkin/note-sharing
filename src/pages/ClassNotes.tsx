@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import BackButton from "../components/BackButton";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
+import styles from "../styles/classNotes.module.css"
 
 export default function ClassNotes() {
   const {subject, classId} = useParams();
@@ -134,10 +135,10 @@ export default function ClassNotes() {
       </Dialog>
 
       <BackButton />
-
+      <img className={styles.headImg} src={require('../images/Class.png')}/>
       <h1>Topic Notes</h1>
-      <h2> subject: {subject} </h2>
-      <h2> class: {classId} </h2>
+      <h2> Subject: {subject} </h2>
+      <h2> Class: {classId} </h2>
       <Fab color="primary" aria-label="add" onClick={handleOpenPopup}>
         <AddIcon/>
       </Fab>
