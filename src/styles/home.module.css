@@ -29,6 +29,7 @@
   margin-left: 8px;
 }
 .classDiv {
+  padding: 0px;
   width: calc(100%/3);
   margin: 1%;
   aspect-ratio: 8/7;
@@ -43,6 +44,7 @@
   background-color: #f0f0f0;
 }
 .classImage {
+  margin: 0px;
   width: 100%;
   height: 70%;
   object-fit: cover;

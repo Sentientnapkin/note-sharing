@@ -84,11 +84,3 @@ export default function Home() {
     </div>
   );
 }
-
-const classes = [
-  {label: 'Computer Science'},
-  {label: 'Advanced Computer Science'},
-  {label: 'Computational Thinking'},
-  {label: 'Data Structures & Algorithms'},
-  {label: 'Software Engineering'},
-];

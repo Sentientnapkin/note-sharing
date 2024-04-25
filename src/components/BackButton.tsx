@@ -5,7 +5,7 @@ import styles from "../styles/back.module.css"
 export default function BackButton() {
   return (
     <div>
-      <Button variant={"contained"} className={styles.butt} onClick={() => window.history.back()}>◄ Back</Button>
+      <Button variant={"contained"} className={styles.butto} onClick={() => window.history.back()}>◄ Back</Button>
     </div>
   );
 }
