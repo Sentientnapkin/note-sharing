@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {getDownloadURL, ref} from "firebase/storage";
 import {storage} from "../firebase/firebaseSetup";
-import Button from "@mui/material/Button";
 import BackButton from "../components/BackButton";
+import styles from "../styles/notePDFView.module.css"
 
 export default function NotePDFView() {
   const { subject, classId, noteId} = useParams();
@@ -18,13 +18,16 @@ export default function NotePDFView() {
   })
 
   return (
-    <div>
-      <div>
-        <BackButton />
-        <h1>{noteId}</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.backandtitle}>
+          <BackButton />
+          <h1 className={styles.title}>{noteId}</h1>
+        </div>
+        <img src={require("../images/logo.png")} className={styles.logo}/>
       </div>
       <div>
-      <iframe src={pdfUrl} title={noteId} width="100%" height="100%"/>
+      <iframe src={pdfUrl} title={noteId} width="100%" height="100%" className={styles.pdfView}/>
       </div>
     </div>
   );

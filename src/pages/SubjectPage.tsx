@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import Button from "@mui/material/Button";
 import styles from "../styles/subject.module.css"
 import {list, ref, listAll} from "firebase/storage";
 import {storage} from "../firebase/firebaseSetup";
@@ -12,7 +11,7 @@ export default function SubjectPage() {
 
   const navigate = useNavigate()
 
-  const imagePath = "./" + subject + ".webp"
+  const imagePath = require('../images/' + subject + '.webp')
 
   async function getClasses() {
     // get notes from firebase
