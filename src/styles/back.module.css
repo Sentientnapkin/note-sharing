@@ -1,9 +1,9 @@
-.butto {
-  position: absolute;
-  color: black;
-  background-color: white;
-  margin: 10px;
+.butt {
+  position: absolute !important;
+  color: black !important;
+  background-color: white !important;
+  margin: 10px !important;
 }
-.butto:hover {
-  background-color: lightgray;
+.butt:hover {
+  background-color: lightgray !important;
 }
