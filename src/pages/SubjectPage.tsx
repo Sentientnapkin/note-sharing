@@ -38,7 +38,10 @@ export default function SubjectPage() {
       <BackButton />
 
       <img className={styles.header} src={imagePath}></img>
-      <h1>{subject} Page</h1>
+      <div>
+        <h1>{subject} Page</h1>
+        
+      </div>
       <div>
         <h2>Classes</h2>
         {classes.map(c => {
