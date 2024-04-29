@@ -7,7 +7,8 @@ import SignUp from "../pages/SignUp";
 import SubjectPage from "../pages/SubjectPage";
 import ClassNotes from "../pages/ClassNotes";
 import NotePDFView from "../pages/NotePDFView";
-import {Settings} from "@mui/icons-material";
+import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />
+      },
+      {
+        path: "profile",
+        element: <Profile />
       },
       {
         path: ":subject",

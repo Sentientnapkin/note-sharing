@@ -8,6 +8,7 @@ import styles from "../styles/home.module.css"
 import ClassThumbnail from "../components/ClassThumbnail"
 
 export default function Home() {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -18,9 +19,9 @@ export default function Home() {
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <img src={require('../images/logo.png')} className={styles.logo1}></img>
       <List>
-        {['Account', 'Settings', 'Help'].map((text, index) => (
+        {['Profile', 'Settings'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => navigate("/" + text)}>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -32,7 +33,6 @@ export default function Home() {
   );
 
   let user: User | null;
-  const navigate = useNavigate();
   useEffect(() => {
     onAuthStateChanged(auth, (u) => {
       if (u) {
