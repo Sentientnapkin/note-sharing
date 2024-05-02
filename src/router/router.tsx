@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <ClassNotes/>
       },
       {
-        path: ":subject/:classId/:noteId",
+        path: ":subject/:classId/:unit/:noteId",
         element: <NotePDFView />
       },
       {
