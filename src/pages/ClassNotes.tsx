@@ -240,7 +240,7 @@ export default function ClassNotes() {
           const f = note.name.substring(0, note.name.length - 4);
           return (
             <div key={note.name}>
-              <Button onClick={() => handleOpenPDF(note.fullPath, note)}}>
+              <Button onClick={() => handleOpenPDF(note.fullPath, note)}>
                 {f}
               </Button>
             </div>
