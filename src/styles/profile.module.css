@@ -1,0 +1,15 @@
+.title {
+  margin-left: 110px;
+  padding-top: 7px;
+}
+.password {
+  text-wrap: nowrap;
+}
+.passButton {
+  margin: 10px !important;
+  color: black !important;
+  background-color: rgb(255, 0, 0) !important;
+}
+.passButton:hover {
+  background-color: rgb(200, 0, 0) !important;
+}

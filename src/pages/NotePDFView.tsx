@@ -25,8 +25,8 @@ export default function NotePDFView() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.backandtitle}>
-          <Button onClick={handleBackButtonClick}>
-            Back
+          <Button className={styles.back} onClick={handleBackButtonClick}>
+            ◄ Back
           </Button>
           <h1 className={styles.title}>{noteId}</h1>
         </div>

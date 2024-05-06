@@ -3,3 +3,42 @@
   height: 300px;
   object-fit: cover;
 }
+.plus {
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+}
+.titleHolder {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.lineHolder{
+  height: 50px;
+  width: 100%;
+  border-color: grey;
+  border-width: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.line {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between !important;
+}
+h1 {
+  margin: 10px;
+}
+h2 {
+  margin: 10px;
+}
+p {
+  margin-left: 25px;
+  margin-right: 25px;
+  width: 20%;
+}

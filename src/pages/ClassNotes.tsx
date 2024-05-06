@@ -136,19 +136,23 @@ export default function ClassNotes() {
 
       <BackButton />
       <img className={styles.headImg} src={require('../images/Class.png')}/>
-      <h1>Topic Notes</h1>
-      <h2> Subject: {subject} </h2>
-      <h2> Class: {classId} </h2>
-      <Fab color="primary" aria-label="add" onClick={handleOpenPopup}>
-        <AddIcon/>
-      </Fab>
+      <div className={styles.titleHolder}>
+        <h1> {classId} </h1>
+        <Fab className={styles.plus} aria-label="add" onClick={handleOpenPopup}>
+          <AddIcon/>
+        </Fab>
+      </div>
       <div>
         <h2>Notes</h2>
         {notes.map(note => {
+          const f = note.name.substring(0, note.name.length - 4);
           return (
-            <div key={note.name}>
-              <Button onClick={() => handleOpenPDF(note)}>
-                {note.name}
+            <div className={styles.lineHolder}>
+              <Button className={styles.line} onClick={() => handleOpenPDF(note)} key={note.name}>
+                <p>{f}</p>
+                <p>Uploaded by: Sebastian Vargas</p>
+                <p>Unit: Inference</p>
+                <p>Date: 01/01/01</p>
               </Button>
             </div>
           )
