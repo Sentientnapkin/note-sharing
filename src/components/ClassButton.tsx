@@ -5,7 +5,7 @@ export default function ClassButton(props: {clas : string, teacher : string, onC
   return (
     <Button onClick={props.onC} className={styles.holder}>
       <img className={styles.thumbnail} src={require("../images/Class.png")}></img>
-      <h2>{props.clas}</h2>
+      <h2>{props.clas.slice(0, 18) + (props.clas.slice(0, 18) !== props.clas ? "..." : "" )}</h2>
       <p>Taught by {props.teacher}</p>
     </Button>
   )

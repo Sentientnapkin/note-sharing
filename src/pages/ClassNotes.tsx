@@ -1,8 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {Dialog, DialogActions, DialogContent, DialogTitle, Fab} from '@mui/material';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Autocomplete, createFilterOptions,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Fab,
+  Select
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { storage } from '../firebase/firebaseSetup';
-import { ref, uploadBytes, list } from "firebase/storage";
+import {ref, uploadBytes, list, listAll} from "firebase/storage";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
@@ -10,13 +19,27 @@ import BackButton from "../components/BackButton";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import styles from "../styles/classNotes.module.css"
+import TextField from "@mui/material/TextField";
+
+const filter = createFilterOptions();
 
 export default function ClassNotes() {
   const {subject, classId} = useParams();
+
+  const navigate = useNavigate()
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [units, setUnits] = useState<any[]>([])
+  const [notes, setNotes] = useState<any[]>([])
+
+  const [unitValue, setUnitValue] = useState<any | null>("");
+  const [openUnitDialog, toggleOpenUnitDialog] = useState(false);
+
   const [uploadPopupOpen, setUploadPopupOpen] = useState<boolean>(false);
   const [uploadDate, setUploadDate] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null)
-  const [notes, setNotes] = useState<any[]>([])
+
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -39,30 +62,13 @@ export default function ClassNotes() {
     setUploadPopupOpen(false)
   }
 
-  const navigate = useNavigate()
+  function handleUnitPopup() {
+    toggleOpenUnitDialog(true)
+    setUnitValue("")
+  }
 
-  async function getNotes() {
-    // get notes from firebase
-    const listRef = ref(storage, 'notes/' + subject + "/" + classId + "/");
-
-    // Fetch the first page of 100.
-    const firstPage = await list(listRef, {maxResults: 30});
-    setNotes(firstPage.items);
-
-    // Use the result.
-    console.log(firstPage.items)
-    // processItems(firstPage.items)
-    // processPrefixes(firstPage.prefixes)
-
-    // Fetch the second page if there are more elements.
-    if (firstPage.nextPageToken) {
-      const secondPage = await list(listRef, {
-        maxResults: 30,
-        pageToken: firstPage.nextPageToken,
-      });
-      // processItems(secondPage.items)
-      // processPrefixes(secondPage.prefixes)
-    }
+  function handleCloseUnitPopup() {
+    toggleOpenUnitDialog(false)
   }
 
   function handleNoteInput (event: any) {
@@ -73,12 +79,13 @@ export default function ClassNotes() {
   function handleUploadNote() {
     if (file == null) return
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + file.name);
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue.name + "/" + file.name);
 
     const metadata = {
       contentType: 'application/pdf',
       customMetadata: {
         'classDate': uploadDate.toString().slice(0, 16),
+        'unit': unitValue.name,
       },
     }
 
@@ -89,14 +96,41 @@ export default function ClassNotes() {
     })
   }
 
-  async function handleOpenPDF(note: any) {
-    navigate('/' + subject + '/' + classId + '/' + note.name)
+  async function handleOpenPDF(fullPath: any, note: any) {
+    const unit = note.fullPath.split("/")[3]
+    navigate('/' + subject + '/' + classId + '/' + unit + '/' + note.name)
   }
 
+  const getNotes = useCallback(async () => {
+    setNotes([])
+
+    const listRef1 = ref(storage, 'notes/' + subject + "/" + classId + "/");
+
+    const directories = await listAll(listRef1)
+      .then(async(res) => {
+        const allNotes = [];
+
+        setUnits(res.prefixes)
+
+        for (let i = 0; i < res.prefixes.length; i++) {
+          const unit = res.prefixes[i]
+          const listRef2 = ref(storage, 'notes/' + subject + "/" + classId + "/" + unit.name + "/");
+
+          const firstPage = await list(listRef2, {maxResults: 30});
+
+          allNotes.push(...firstPage.items);
+        }
+
+        setNotes(allNotes)
+        setIsLoading(false)
+
+        return res.prefixes
+      })
+  }, [subject, classId])
 
   useEffect(() => {
-    getNotes().then(r => console.log(r))
-  }, [])
+    getNotes().then(() => {})
+  }, [getNotes])
 
 
   return (
@@ -126,6 +160,64 @@ export default function ClassNotes() {
           </div>
         </DialogContent>
         <DialogContent>
+          <Autocomplete
+            onChange={(event, newValue) => {
+              if (newValue && newValue.inputValue) {
+                handleUnitPopup()
+                setUnitValue(newValue.inputValue);
+                return;
+              }
+              setUnitValue(newValue);
+            }}
+            filterOptions={(options, params) => {
+              const filtered = filter(options, params);
+
+              if (params.inputValue !== '') {
+                filtered.push({
+                  inputValue: params.inputValue,
+                  title: `Add "${params.inputValue}"`,
+                });
+              }
+
+              return filtered;
+            }}
+            id="Unit"
+            options={units}
+            getOptionLabel={(option) => {
+              // for example value selected with enter, right from the input
+              if (typeof option === 'string') {
+                return option;
+              }
+              if (option.inputValue) {
+                return option.inputValue;
+              }
+              return option.name;
+            }}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            renderOption={(props, option) => <li {...props}>{option.title}</li>}
+            sx={{ width: 300 }}
+            freeSolo
+            renderInput={(params) => <TextField {...params} label="Unit" />}
+          />
+          <Dialog open={openUnitDialog} onClose={handleCloseUnitPopup}>
+            <DialogTitle>Add new Unit</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to add a new unit: {unitValue}?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => {
+                handleCloseUnitPopup()
+                setUnitValue("")
+              }}>Cancel</Button>
+              <Button onClick={handleCloseUnitPopup}>Add</Button>
+            </DialogActions>
+          </Dialog>
+        </DialogContent>
+        <DialogContent>
           <DatePicker value={uploadDate} onChange={setUploadDate} />
         </DialogContent>
         <DialogActions>
@@ -147,12 +239,9 @@ export default function ClassNotes() {
         {notes.map(note => {
           const f = note.name.substring(0, note.name.length - 4);
           return (
-            <div className={styles.lineHolder}>
-              <Button className={styles.line} onClick={() => handleOpenPDF(note)} key={note.name}>
-                <p>{f}</p>
-                <p>Uploaded by: Sebastian Vargas</p>
-                <p>Unit: Inference</p>
-                <p>Date: 01/01/01</p>
+            <div key={note.name}>
+              <Button onClick={() => handleOpenPDF(note.fullPath, note)}}>
+                {f}
               </Button>
             </div>
           )

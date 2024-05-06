@@ -43,7 +43,6 @@ export default function SubjectPage() {
         
       </div>
       <div>
-        <h2>Classes</h2>
         {classes.map(c => {
           return (
             <ClassButton onC={() => {navigate('/' + subject + '/' + c.name)}} teacher={"Generic"} clas={c.name}/>

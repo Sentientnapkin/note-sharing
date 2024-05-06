@@ -6,7 +6,7 @@ import styles from "../styles/notePDFView.module.css"
 import Button from "@mui/material/Button";
 
 export default function NotePDFView() {
-  const { subject, classId, noteId} = useParams();
+  const { subject, classId, noteId, unit} = useParams();
   const [pdfUrl, setPdfUrl] = useState<string | undefined>(undefined)
 
   const handleBackButtonClick = () => {
@@ -14,7 +14,7 @@ export default function NotePDFView() {
   }
 
   useEffect (() => {
-    getDownloadURL(ref(storage, "notes/" + subject + "/" +  classId + "/" + noteId)).then((url) => {
+    getDownloadURL(ref(storage, "notes/" + subject + "/" +  classId + "/" + unit +"/" + noteId)).then((url) => {
       setPdfUrl(url)
     }).catch((error) => {
       console.error(error);

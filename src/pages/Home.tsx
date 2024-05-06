@@ -70,15 +70,36 @@ export default function Home() {
         </button>
       </div>
       <div className={styles.holder}>
-        <ClassThumbnail oClick={() => {navigate('/Art');}} jClassName={"Art"}/>
-        <ClassThumbnail oClick={() => {navigate('/Math');}} jClassName={"Math"}/>
-        <ClassThumbnail oClick={() => {navigate('/History');}} jClassName={"History"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Art');
+        }} jClassName={"Art"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Math');
+        }} jClassName={"Math"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/History');
+        }} jClassName={"History"}/>
       </div>
       <div className={styles.holder}>
-        <ClassThumbnail oClick={() => {navigate('/Science');}} jClassName={"Science"}/>
-        <ClassThumbnail oClick={() => {navigate('/Literature');}} jClassName={"Literature"}/>
-        <ClassThumbnail oClick={() => {navigate('/Language');}} jClassName={"Language"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Science');
+        }} jClassName={"Science"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Literature');
+        }} jClassName={"Literature"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Language');
+        }} jClassName={"Language"}/>
       </div>
+      <div className={styles.holder}>
+        <ClassThumbnail oClick={() => {
+          navigate('/Computer Science & Engineering');
+        }} jClassName={"Computer Science & Engineering"}/>
+        <ClassThumbnail oClick={() => {
+          navigate('/Other');
+        }} jClassName={"Other"}/>
+      </div>
+
       <Drawer open={open} onClose={toggleDrawer(false)} anchor={'right'}>
         {DrawerList}
       </Drawer>
