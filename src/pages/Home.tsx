@@ -14,7 +14,7 @@ export default function Home() {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-
+  const screenAR = window.innerWidth/window.innerHeight;
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <img src={require('../images/logo.png')} className={styles.logo1}></img>
@@ -47,7 +47,12 @@ export default function Home() {
       }
     })
   }, []);
-
+  var subjectRows = [["Art", "Math", "History"], ["Science", "Literature", "Language"], ["Computer Science & Engineering", "Other"]];
+  if (screenAR <= 1) {
+    subjectRows = [["Art", "Math"],["History", "Science"],["Literature", "Language"],["Computer Science & Engineering", "Other"]];
+  }
+  
+  
   return (
     <div>
       <div className={styles.title}>
@@ -69,35 +74,23 @@ export default function Home() {
           </img>
         </button>
       </div>
-      <div className={styles.holder}>
-        <ClassThumbnail oClick={() => {
-          navigate('/Art');
-        }} jClassName={"Art"}/>
-        <ClassThumbnail oClick={() => {
-          navigate('/Math');
-        }} jClassName={"Math"}/>
-        <ClassThumbnail oClick={() => {
-          navigate('/History');
-        }} jClassName={"History"}/>
-      </div>
-      <div className={styles.holder}>
-        <ClassThumbnail oClick={() => {
-          navigate('/Science');
-        }} jClassName={"Science"}/>
-        <ClassThumbnail oClick={() => {
-          navigate('/Literature');
-        }} jClassName={"Literature"}/>
-        <ClassThumbnail oClick={() => {
-          navigate('/Language');
-        }} jClassName={"Language"}/>
-      </div>
-      <div className={styles.holder}>
-        <ClassThumbnail oClick={() => {
-          navigate('/Computer Science & Engineering');
-        }} jClassName={"Computer Science & Engineering"}/>
-        <ClassThumbnail oClick={() => {
-          navigate('/Other');
-        }} jClassName={"Other"}/>
+      <div>
+        {subjectRows.map((m) => {
+          return (
+            <div className={styles.holder}>
+              <ClassThumbnail oClick={() => {
+                  navigate('/' + m[0]);
+                }} jClassName={m[0]} numRows={subjectRows.length}/>
+              <ClassThumbnail oClick={() => {
+                  navigate('/' + m[1]);
+                }} jClassName={m[1]} numRows={subjectRows.length}/>  
+              {m.length > 2 && 
+              <ClassThumbnail oClick={() => {
+                  navigate('/' + m[2]);
+                }} jClassName={m[2]} numRows={subjectRows.length}/>}
+            </div>
+          )
+        })}
       </div>
 
       <Drawer open={open} onClose={toggleDrawer(false)} anchor={'right'}>

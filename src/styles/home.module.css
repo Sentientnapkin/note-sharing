@@ -30,10 +30,20 @@
 }
 .classDiv {
   padding: 0px;
-  width: calc(100%/3);
+  width: calc(94%/3);
   margin: 1%;
-  aspect-ratio: 8/7;
-  border-color: black;
+  aspect-ratio: 10/7;
+  border-radius: 15px;
+  border-width: 0px;
+  display: flex;
+  background-color: white;
+  flex-direction: column;
+}
+.classDiv4 {
+  padding: 0px;
+  width: calc(96%/2);
+  margin: 1%;
+  aspect-ratio: 10/7;
   border-radius: 15px;
   border-width: 0px;
   display: flex;
@@ -43,10 +53,13 @@
 .classDiv:hover {
   background-color: #f0f0f0;
 }
+.classDiv4:hover {
+  background-color: #f0f0f0;
+}
 .classImage {
   margin: 0px;
   width: 100%;
-  height: 70%;
+  height: 80%;
   object-fit: cover;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
@@ -56,7 +69,7 @@
   flex-direction: row;
   width: 100%;
   justify-content: space-around;
-  align-items: center;
+  align-items: baseline;
 }
 .logo2 {
   width: 80px;
@@ -70,16 +83,18 @@
   width: 40%;
 }
 .titleText {
-  font-size: 30px;
+  font-size: 2em;
   font-weight: bolder;
   align-self: center;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .buttonText {
-  font-size: 40px;
+  font-size: 3em;
   font-weight: bolder;
   align-self: center;
   font-family: Roboto, sans-serif;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 * {
   color: black;
