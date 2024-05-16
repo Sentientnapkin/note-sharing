@@ -53,7 +53,39 @@ export default function Settings() {
         Preferences content
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Privacy content
+        <div className={styles.page}>
+          <h1>Privacy Policy</h1>
+          <p className={styles.para}>At Hadrian's Library, we are committed to protecting the privacy and security of your personal information. This Privacy Policy outlines how we collect, use, disclose, and protect your information when you use our note-sharing website.</p>
+          <h3>1. The Information We Collect</h3>
+          <ul>
+            <li>Personal Information: When you register for an account on our website, we may collect personal information such as your name, email address, school affiliation, and any other information you choose to provide. </li>
+            <li>Note Contributions: Any notes, documents, or other materials you upload or share on our website.</li>
+          </ul>
+          <h3>2. How We Use Your Information</h3>
+          <ul>
+            <li>To Provide Services: We use your personal information to create and manage your account, facilitate note-sharing, and provide customer support.</li>
+            <li>Communication: We may use your email address to send you important updates, newsletters, or other communications related to our services.</li>
+            <li>Legal Compliance: We may use your information to comply with legal obligations or respond to lawful requests from authorities.</li>
+          </ul>
+          <h3>3. Information Sharing and Disclosure</h3>
+          <ul>
+            <li>Third-Party Service Providers: We may share your information with third-party service providers who assist us in operating our website.</li>
+            <li>Legal Compliance: We may disclose your information if required by law or in response to legal processes, such as court orders or subpoenas.</li>
+            <li>Consent: We may share your information with your consent or as otherwise described at the time of collection.</li>
+          </ul>
+          <h3>4. Data Security</h3>
+          <p className={styles.para}>We take appropriate measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. These measures include encryption, access controls, etc.</p>
+          <h3>5. Your Rights</h3>
+          <ul>
+            <li>Access and Correction: You have the right to access and correct any inaccuracies in your personal information stored on our website.</li>
+            <li>Deletion: You may request the deletion of your account and associated personal information, subject to certain legal limitations and obligations.</li>
+          </ul>
+          <h3>7. Changes to this Privacy Policy</h3>
+          <p className={styles.para}>We reserve the right to update or modify this Privacy Policy at any time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+          <h3>8. Contact Us</h3>
+          <p className={styles.para}>For any questions or concerns you may have about our website, including this Privacy Policy, see the Contact Us tab by clicking "Help" at the top of your screen.</p>
+          <p className={styles.para}>By using our website, you agree to the terms of this Privacy Policy</p>
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <div className={styles.page}>

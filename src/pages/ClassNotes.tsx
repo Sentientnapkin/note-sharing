@@ -240,8 +240,11 @@ export default function ClassNotes() {
           const f = note.name.substring(0, note.name.length - 4);
           return (
             <div key={note.name}>
-              <Button onClick={() => handleOpenPDF(note.fullPath, note)}>
-                {f}
+              <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note)} key={note.name}>
+                <p>{f}</p>
+                <p>Uploaded by: Sebastian Vargas</p>
+                <p>Unit: Inference</p>
+                <p>Date: 01/01/01</p>
               </Button>
             </div>
           )
