@@ -19,6 +19,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import styles from "../styles/classNotes.module.css"
 import TextField from "@mui/material/TextField";
+import {auth} from "../firebase/firebaseSetup";
 
 const filter = createFilterOptions();
 
@@ -85,6 +86,7 @@ export default function ClassNotes() {
       customMetadata: {
         'classDate': uploadDate.toString().slice(0, 16),
         'unit': unitValue,
+        'uploadedBy': auth.currentUser?.displayName ?? "Unknown",
       },
     }
 
@@ -94,9 +96,8 @@ export default function ClassNotes() {
       console.log('Uploaded a blob or file!');
     }).then(() => {
       handleClosePopup()
+      setIsLoading(false)
     })
-
-    setIsLoading(false)
   }
 
   async function handleOpenPDF(fullPath: any, noteName: any) {
@@ -131,7 +132,8 @@ export default function ClassNotes() {
           const name = note.name.substring(0, note.name.length - 4);
           const classDate = metadata?.classDate
           const unit = metadata?.unit
-          return {name: name, fileName: note.name, fullPath: note.fullPath, classDate: classDate, unit: unit}
+          const uploadedBy = metadata?.uploadedBy
+          return {name: name, fileName: note.name, fullPath: note.fullPath, classDate: classDate, unit: unit, uploadedBy: uploadedBy}
         })
 
         setNotes(await Promise.all(fullNotes))
@@ -261,6 +263,9 @@ export default function ClassNotes() {
               </p>
               <p>
                 {note.unit}
+              </p>
+              <p>
+                {note.uploadedBy}
               </p>
             </div>
           )
