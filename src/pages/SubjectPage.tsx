@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import styles from "../styles/subject.module.css"
 import {list, ref, listAll} from "firebase/storage";
@@ -45,7 +45,29 @@ export default function SubjectPage() {
   useEffect(() => {
     getClasses().then(r => console.log(r))
   }, [])
-
+  const screenAR = window.innerWidth/window.innerHeight;
+  console.log(screenAR);
+  const [classWidth, setClassWidth] = useState<any>(window.innerWidth/4);
+  if (screenAR <= 0.7 && classWidth !== window.innerWidth/2) {
+    setClassWidth(window.innerWidth/2);
+  }
+  else if (screenAR <= 1 && screenAR > 0.7 && classWidth !== window.innerWidth/3) {
+    setClassWidth(window.innerWidth/3);
+  }
+  window.addEventListener('resize', function (event) {
+    console.log('resized');
+    const screenAR = window.innerWidth/window.innerHeight;
+    console.log(screenAR);
+    if (screenAR <= 0.7 && classWidth !== window.innerWidth/2) {
+      setClassWidth(window.innerWidth/2);
+    }
+    else if (screenAR <= 1 && screenAR > 0.7 && classWidth !== window.innerWidth/3) {
+      setClassWidth(window.innerWidth/3);
+    }
+    else if (screenAR > 1 && classWidth !== window.innerWidth/4){
+      setClassWidth(window.innerWidth/4);
+    }
+  });
   return (
     <div>
       <BackButton />
@@ -59,7 +81,7 @@ export default function SubjectPage() {
         {classes.map(c => {
 
           return (
-            <ClassButton onC={() => {navigate('/' + subject + '/' + c.className)}} teacher={c.teacherNames} clas={c.className} key={c.className} imgUrl={c.imageUrl}/>
+            <ClassButton onC={() => {navigate('/' + subject + '/' + c.className)}} teacher={c.teacherNames} clas={c.className} key={c.className} imgUrl={c.imageUrl} wid={classWidth}/>
           )
         })}
       </div>
