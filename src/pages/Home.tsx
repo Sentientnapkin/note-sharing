@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import { logOut } from '../firebase/firebaseFunctions';
 import { onAuthStateChanged, User} from "firebase/auth";
 import {auth} from '../firebase/firebaseSetup';
-import {Autocomplete, Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField} from "@mui/material"
+import {Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemText} from "@mui/material"
 import styles from "../styles/home.module.css"
 import ClassThumbnail from "../components/ClassThumbnail"
 
@@ -39,6 +39,10 @@ export default function Home() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         user = u;
+        if (!user.email?.endsWith("athenian.org")) {
+          logOut();
+          navigate('/signup');
+        }
         // ...
       } else {
         // User is signed out
@@ -60,15 +64,6 @@ export default function Home() {
           <img className={styles.logo2} src={require("../images/logo.png")}></img>
           <h1 className={styles.titleText}>Hadrian's Library</h1>
         </div>
-        {/*
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={classes}
-          sx={{ width: 900 }}
-          renderInput={(params) => <TextField {...params} label="Topic" />}
-        />
-        */}
         <button className={styles.pfpButton} onClick={toggleDrawer(true)}>
           <img src={require("../images/defaultProfile.webp")} className={styles.pfp}>
           </img>

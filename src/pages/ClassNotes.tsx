@@ -7,11 +7,10 @@ import {
   DialogContentText,
   DialogTitle,
   Fab,
-  Select
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { storage } from '../firebase/firebaseSetup';
-import {ref, uploadBytes, list, listAll} from "firebase/storage";
+import {ref, uploadBytes, list, listAll, getMetadata} from "firebase/storage";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
@@ -76,29 +75,33 @@ export default function ClassNotes() {
     setFile(event.target.files[0])
   }
 
-  function handleUploadNote() {
+  async function handleUploadNote() {
     if (file == null) return
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue.name + "/" + file.name);
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue + "/" + file.name);
 
     const metadata = {
       contentType: 'application/pdf',
       customMetadata: {
         'classDate': uploadDate.toString().slice(0, 16),
-        'unit': unitValue.name,
+        'unit': unitValue,
       },
     }
 
-    uploadBytes(storageRef, file, metadata).then((snapshot) => {
+    setIsLoading(true)
+
+    await uploadBytes(storageRef, file, metadata).then((snapshot) => {
       console.log('Uploaded a blob or file!');
     }).then(() => {
       handleClosePopup()
     })
+
+    setIsLoading(false)
   }
 
-  async function handleOpenPDF(fullPath: any, note: any) {
-    const unit = note.fullPath.split("/")[3]
-    navigate('/' + subject + '/' + classId + '/' + unit + '/' + note.name)
+  async function handleOpenPDF(fullPath: any, noteName: any) {
+    const unit = fullPath.split("/")[3]
+    navigate('/' + subject + '/' + classId + '/' + unit + '/' + noteName)
   }
 
   const getNotes = useCallback(async () => {
@@ -116,12 +119,22 @@ export default function ClassNotes() {
           const unit = res.prefixes[i]
           const listRef2 = ref(storage, 'notes/' + subject + "/" + classId + "/" + unit.name + "/");
 
-          const firstPage = await list(listRef2, {maxResults: 30});
+          const firstPage = await list(listRef2, {maxResults: 100});
 
           allNotes.push(...firstPage.items);
         }
 
-        setNotes(allNotes)
+        const fullNotes = allNotes.map(async (note) => {
+          const metadata = await getMetadata(ref(storage, note.fullPath)).then((metadata) => {
+            return metadata.customMetadata
+          })
+          const name = note.name.substring(0, note.name.length - 4);
+          const classDate = metadata?.classDate
+          const unit = metadata?.unit
+          return {name: name, fileName: note.name, fullPath: note.fullPath, classDate: classDate, unit: unit}
+        })
+
+        setNotes(await Promise.all(fullNotes))
         setIsLoading(false)
 
         return res.prefixes
@@ -184,19 +197,18 @@ export default function ClassNotes() {
             id="Unit"
             options={units}
             getOptionLabel={(option) => {
-              // for example value selected with enter, right from the input
               if (typeof option === 'string') {
                 return option;
               }
               if (option.inputValue) {
                 return option.inputValue;
               }
-              return option.name;
+              return option.name || "No Name";
             }}
             selectOnFocus
             clearOnBlur
             handleHomeEndKeys
-            renderOption={(props, option) => <li {...props}>{option.title}</li>}
+            renderOption={(props, option) => <li {...props}>{option.name}</li>}
             sx={{ width: 300 }}
             freeSolo
             renderInput={(params) => <TextField {...params} label="Unit" />}
@@ -236,16 +248,20 @@ export default function ClassNotes() {
       </div>
       <div>
         <h2>Notes</h2>
-        {notes.map(note => {
-          const f = note.name.substring(0, note.name.length - 4);
+        {isLoading && <p>Loading...</p>}
+        {
+          notes.map(note => {
           return (
             <div key={note.name}>
-              <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note)} key={note.name}>
-                <p>{f}</p>
-                <p>Uploaded by: Sebastian Vargas</p>
-                <p>Unit: Inference</p>
-                <p>Date: 01/01/01</p>
+              <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
+                {note.name}
               </Button>
+              <p>
+                {note.classDate}
+              </p>
+              <p>
+                {note.unit}
+              </p>
             </div>
           )
         })}

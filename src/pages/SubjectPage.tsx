@@ -2,11 +2,13 @@ import React, {useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import styles from "../styles/subject.module.css"
 import {list, ref, listAll} from "firebase/storage";
-import {storage} from "../firebase/firebaseSetup";
+import {storage, db} from "../firebase/firebaseSetup";
 import BackButton from "../components/BackButton";
-import ClassButton from "../components/ClassButton"
+import ClassButton from "../components/ClassButton";
+import { collection, getDocs } from "firebase/firestore";
 export default function SubjectPage() {
   const { subject } = useParams();
+  const subjectString = subject as string
   const [classes, setClasses] = React.useState<any[]>([])
 
   const navigate = useNavigate()
@@ -19,14 +21,25 @@ export default function SubjectPage() {
 
     // Fetch the first page of 100.
     const directories = await listAll(listRef)
-      .then((res) => {
-        setClasses(res.prefixes);
-        return res.prefixes
-      })
+      .then(async (res) => {
+        return res.prefixes;
+  })
+    const classesMap = new Map<string, any[]>()
+    const querySnapshot = await getDocs(collection(db, "class_info", subjectString, "Classes"));
+    querySnapshot.forEach((doc) => {
+      classesMap.set(doc.id, [doc.data().names, doc.data().imageUrl])
+    });
 
+    const classesArray: React.SetStateAction<any[]> = []
+    directories.forEach((dir) => {
+      const name = dir.fullPath.split("/").pop()
+      const nameString = name as string
+      const teacherNames = classesMap.get(nameString)?.[0] ?? "NA"
+      const imageUrl = classesMap.get(nameString)?.[1] ?? ""
+      classesArray.push({className: name, teacherNames: teacherNames, imageUrl: imageUrl})
+    })
 
-    // Use the result.
-    console.log(directories)
+    setClasses(classesArray)
   }
 
   useEffect(() => {
@@ -40,12 +53,13 @@ export default function SubjectPage() {
       <img className={styles.header} src={imagePath}></img>
       <div>
         <h1>{subject} Page</h1>
-        
+
       </div>
       <div>
         {classes.map(c => {
+
           return (
-            <ClassButton onC={() => {navigate('/' + subject + '/' + c.name)}} teacher={"Generic"} clas={c.name}/>
+            <ClassButton onC={() => {navigate('/' + subject + '/' + c.className)}} teacher={c.teacherNames} clas={c.className} key={c.className} imgUrl={c.imageUrl}/>
           )
         })}
       </div>

@@ -19,7 +19,8 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    if (passwordRef.current!.value === confirmPasswordRef.current!.value) {
+    // replace true with verifying that email ends in athenian.org
+    if (emailRef.current!.value.endsWith("athenian.org") && passwordRef.current!.value === confirmPasswordRef.current!.value) {
       const r = await signUp(emailRef.current!.value, passwordRef.current!.value)
       if (r.error !== ''){
         setError(r.error)
@@ -36,7 +37,11 @@ export default function SignUp() {
         }
         navigate('/')
       }
-    } else {
+    }
+    else if (!emailRef.current!.value.endsWith("athenian.org)") && passwordRef.current!.value === confirmPasswordRef.current!.value){
+      setError('Please use an Athenian email')
+    }
+    else {
       setError('Passwords do not match')
     }
   }
@@ -44,6 +49,7 @@ export default function SignUp() {
   return (
     <div className={styles.container}>
       <h1>Sign Up</h1>
+      <h2>Be sure to use an Athenian account, Non-Athenian accounts will be redirected to here.</h2>
       <div>
         <TextField
           id="username"
