@@ -250,30 +250,12 @@ export default function ClassNotes() {
           <AddIcon/>
         </Fab>
       </div>
-      <Autocomplete
-        freeSolo
-        disableClearable
-        options={notes.map((n) =>
-        {
-          return n.name
-        })}
-        getOptionLabel={(c) => c}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search"
-            InputProps={{
-              ...params.InputProps,
-              type: 'search',
-            }}
-
-            onChange={
-              (e) => {
-                setSearchText(e.target.value)
-              }
-            }
-          />
-        )}
+      <TextField
+        onChange={
+          (e) => {
+            setSearchText(e.target.value)
+          }
+        }
       />
 
       <div>
@@ -298,7 +280,7 @@ export default function ClassNotes() {
                   </p>
                 </div>
               )
-            } else if (note.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+            } else if (note.name.toLowerCase().contains(searchText.toLowerCase())) {
               return (
                 <div key={note.name}>
                   <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
