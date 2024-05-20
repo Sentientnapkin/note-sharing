@@ -70,16 +70,16 @@ export default function SubjectPage() {
   });
   return (
     <div>
-      <BackButton />
+      <BackButton path={"/"}/>
 
-      <img className={styles.header} src={imagePath}></img>
+      <img className={styles.header} src={imagePath}/>
+
       <div>
         <h1>{subject} Page</h1>
 
       </div>
       <div>
         {classes.map(c => {
-
           return (
             <ClassButton onC={() => {navigate('/' + subject + '/' + c.className)}} teacher={c.teacherNames} clas={c.className} key={c.className} imgUrl={c.imageUrl} wid={classWidth}/>
           )

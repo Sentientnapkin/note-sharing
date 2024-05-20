@@ -40,6 +40,8 @@ export default function ClassNotes() {
   const [uploadDate, setUploadDate] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null)
 
+  const [searchText, setSearchText] = useState<string>("")
+
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -190,7 +192,7 @@ export default function ClassNotes() {
               if (params.inputValue !== '') {
                 filtered.push({
                   inputValue: params.inputValue,
-                  title: `Add "${params.inputValue}"`,
+                  name: `Add "${params.inputValue}"`,
                 });
               }
 
@@ -205,7 +207,7 @@ export default function ClassNotes() {
               if (option.inputValue) {
                 return option.inputValue;
               }
-              return option.name || "No Name";
+              return option.name;
             }}
             selectOnFocus
             clearOnBlur
@@ -240,7 +242,7 @@ export default function ClassNotes() {
         </DialogActions>
       </Dialog>
 
-      <BackButton />
+      <BackButton path={"/" + subject + "/"}/>
       <img className={styles.headImg} src={require('../images/Class.png')}/>
       <div className={styles.titleHolder}>
         <h1> {classId} </h1>
@@ -248,27 +250,74 @@ export default function ClassNotes() {
           <AddIcon/>
         </Fab>
       </div>
+      <Autocomplete
+        freeSolo
+        disableClearable
+        options={notes.map((n) =>
+        {
+          return n.name
+        })}
+        getOptionLabel={(c) => c}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search"
+            InputProps={{
+              ...params.InputProps,
+              type: 'search',
+            }}
+
+            onChange={
+              (e) => {
+                setSearchText(e.target.value)
+              }
+            }
+          />
+        )}
+      />
+
       <div>
         <h2>Notes</h2>
         {isLoading && <p>Loading...</p>}
         {
           notes.map(note => {
-          return (
-            <div key={note.name}>
-              <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
-                {note.name}
-              </Button>
-              <p>
-                {note.classDate}
-              </p>
-              <p>
-                {note.unit}
-              </p>
-              <p>
-                {note.uploadedBy}
-              </p>
-            </div>
-          )
+            if (searchText == "") {
+              return (
+                <div key={note.name}>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
+                    {note.name}
+                  </Button>
+                  <p>
+                    {note.classDate}
+                  </p>
+                  <p>
+                    {note.unit}
+                  </p>
+                  <p>
+                    {note.uploadedBy}
+                  </p>
+                </div>
+              )
+            } else if (note.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+              return (
+                <div key={note.name}>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
+                    {note.name}
+                  </Button>
+                  <p>
+                    {note.classDate}
+                  </p>
+                  <p>
+                    {note.unit}
+                  </p>
+                  <p>
+                    {note.uploadedBy}
+                  </p>
+                </div>
+              )
+            } else {
+              return null
+            }
         })}
       </div>
     </div>

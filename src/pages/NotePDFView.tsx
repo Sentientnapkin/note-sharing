@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {getDownloadURL, ref} from "firebase/storage";
 import {storage} from "../firebase/firebaseSetup";
 import styles from "../styles/notePDFView.module.css"
@@ -9,8 +9,10 @@ export default function NotePDFView() {
   const { subject, classId, noteId, unit} = useParams();
   const [pdfUrl, setPdfUrl] = useState<string | undefined>(undefined)
 
+  const navigate = useNavigate()
+
   const handleBackButtonClick = () => {
-    window.history.back()
+    navigate("/" + subject + "/" + classId)
   }
 
   useEffect (() => {
