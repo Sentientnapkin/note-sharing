@@ -252,8 +252,8 @@ export default function ClassNotes() {
       </div>
       <TextField
         onChange={
-          (e) => {
-            setSearchText(e.target.value)
+          (event) => {
+            setSearchText(event.target.value)
           }
         }
       />
@@ -280,7 +280,7 @@ export default function ClassNotes() {
                   </p>
                 </div>
               )
-            } else if (note.name.toLowerCase().contains(searchText.toLowerCase())) {
+            } else if (note.name.toLowerCase().includes(searchText.toLowerCase())) {
               return (
                 <div key={note.name}>
                   <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
