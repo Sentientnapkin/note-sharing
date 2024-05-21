@@ -21,12 +21,11 @@ export default function ClassButton(props: {clas : string, teacher : string, onC
   useEffect(() => {
     getImageUrl().then(r => console.log(imageUrl))
   }, [])
-
   return (
     <Button style={{width: props.wid}} onClick={props.onC} className={styles.holder}>
       <img className={styles.thumbnail} src={imageUrl}></img>
-      <h2>{props.clas.slice(0, 18) + (props.clas.slice(0, 18) !== props.clas ? "..." : "" )}</h2>
-      <p className={styles.para}>By {props.teacher.slice(0,27) + (props.teacher.slice(0, 27) !== props.teacher ? "..." : "" )}</p>
+      <h2>{props.clas.slice(0, props.wid/18) + (props.clas.slice(0, props.wid/18) !== props.clas ? "..." : "" )}</h2>
+      <p className={styles.para}>By {props.teacher.slice(0, props.wid/14) + (props.teacher.slice(0, props.wid/14) !== props.teacher ? "..." : "" )}</p>
     </Button>
   )
 }

@@ -7,29 +7,8 @@ import {auth, db, storage} from '../firebase/firebaseSetup';
 import {getDownloadURL, getMetadata, list, listAll, ref, StorageReference} from "firebase/storage";
 
 export default function Profile() {
-  const realPassword = "importThisfromSomeWhere1234"
-  const realPhone = "555-555-5555";
-  const [textInput, setTextInput] = useState('');
-
   const [notes, setNotes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true);
-
-  const handleTextInputChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setTextInput(event.target.value);
-  };
-  const [password, setPassword] = useState<string>("************");
-  const [isPasswordHidden, setIsPasswordHidden] = useState<string>("Reveal");
-
-  function displayPass() {
-    console.log(textInput)
-    if (password === "************" && textInput === realPhone) {
-      setPassword(realPassword);
-      setIsPasswordHidden("Hide")
-    } else {
-      setPassword("************")
-      setIsPasswordHidden("Reveal")
-    }
-  }
 
   async function getMyUploads() {
     setIsLoading(true)
@@ -112,10 +91,7 @@ export default function Profile() {
     <div>
       <BackButton path={"/"}/>
       <h1 className={styles.title}>Account Profile</h1>
-      <p>Username: Sebastian V</p>
-      <p className={styles.password}>Password: {password}</p>
-      <TextField value= {textInput} onChange= {handleTextInputChange} id="outlined-basic" label="Phone #" variant="outlined" />
-      <Button variant={"contained"} className={styles.passButton} onClick={displayPass}>{isPasswordHidden} Password</Button>
+      <p className={styles.para}>Username: {auth.currentUser?.displayName}</p>
       <h2>My Uploads</h2>
       {isLoading && <p>Loading...</p>}
       {notes.map((note) => {

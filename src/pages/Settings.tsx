@@ -1,6 +1,7 @@
 import React from 'react';
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import styles from '../styles/settings.module.css'
+import BackButton from '../components/BackButton';
 
 export default function Settings() {
   const [value, setValue] = React.useState(0);
@@ -44,15 +45,12 @@ export default function Settings() {
 
   return (
     <div>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-        <Tab label="Preferences" {...a11yProps(0)} />
-        <Tab label="Privacy" {...a11yProps(1)} />
-        <Tab label="Help" {...a11yProps(2)} />
+      <BackButton path={"/"}></BackButton>
+      <Tabs className={styles.tabs} value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tab label="Privacy" {...a11yProps(0)} />
+        <Tab label="Help" {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        Preferences content
-      </TabPanel>
-      <TabPanel value={value} index={1}>
         <div className={styles.page}>
           <h1>Privacy Policy</h1>
           <p className={styles.para}>At Hadrian's Library, we are committed to protecting the privacy and security of your personal information. This Privacy Policy outlines how we collect, use, disclose, and protect your information when you use our note-sharing website.</p>
@@ -87,7 +85,7 @@ export default function Settings() {
           <p className={styles.para}>By using our website, you agree to the terms of this Privacy Policy</p>
         </div>
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={1}>
         <div className={styles.page}>
           <h1>Help</h1>
           <h2>Contact Our Support Team</h2>

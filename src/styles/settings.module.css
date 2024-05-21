@@ -2,5 +2,9 @@
   width: 490%;
 }
 .para {
+  margin-left: 0px;
   width: 100%;
+}
+.tabs {
+  margin-left: 100px;
 }

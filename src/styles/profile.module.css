@@ -13,3 +13,6 @@
 .passButton:hover {
   background-color: rgb(200, 0, 0) !important;
 }
+.para {
+  width: 100%;
+}
