@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Fab,
+  Fab, FormControl, InputLabel, MenuItem, Select,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { storage } from '../firebase/firebaseSetup';
@@ -41,6 +41,7 @@ export default function ClassNotes() {
   const [file, setFile] = useState<File | null>(null)
 
   const [searchText, setSearchText] = useState<string>("")
+  const [searchUnit, setSearchUnit] = useState<string>("")
 
 
   const VisuallyHiddenInput = styled('input')({
@@ -258,49 +259,65 @@ export default function ClassNotes() {
         }
       />
 
+      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel id="demo-simple-select-standard-label">Unit</InputLabel>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          value={searchUnit}
+          onChange={(event) => {
+            setSearchUnit(event.target.value)
+          }}
+          label="Unit"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {units.map((unit) => {
+            return (
+              <MenuItem value={unit.name}>{unit.name}</MenuItem>
+            )
+          })}
+        </Select>
+      </FormControl>
+
       <div>
         <h2>Notes</h2>
         {isLoading && <p>Loading...</p>}
         {
           notes.map(note => {
-            if (searchText == "") {
+            if (searchText == "" && searchUnit == "") {
               return (
                 <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
-                    {note.name}
-                  </Button>
-                  <p>
-                    {note.classDate}
-                  </p>
-                  <p>
-                    {note.unit}
-                  </p>
-                  <p>
-                    {note.uploadedBy}
-                  </p>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
+                  <p> {note.classDate} </p>
+                  <p> {note.unit} </p>
+                  <p> {note.uploadedBy} </p>
                 </div>
               )
-            } else if (note.name.toLowerCase().includes(searchText.toLowerCase())) {
+            } else if (note.name.toLowerCase().includes(searchText.toLowerCase()) && searchText !== "") {
               return (
                 <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}>
-                    {note.name}
-                  </Button>
-                  <p>
-                    {note.classDate}
-                  </p>
-                  <p>
-                    {note.unit}
-                  </p>
-                  <p>
-                    {note.uploadedBy}
-                  </p>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
+                  <p> {note.classDate} </p>
+                  <p> {note.unit} </p>
+                  <p> {note.uploadedBy} </p>
                 </div>
               )
-            } else {
+            } else if (note.unit.toLowerCase().includes(searchUnit.toLowerCase()) && searchUnit !== "") {
+              return (
+                <div key={note.name}>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
+                  <p> {note.classDate} </p>
+                  <p> {note.unit} </p>
+                  <p> {note.uploadedBy} </p>
+                </div>
+              )
+            }
+            else {
               return null
             }
-        })}
+          })}
       </div>
     </div>
   );
