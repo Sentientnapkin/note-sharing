@@ -3,18 +3,37 @@ import {useNavigate} from "react-router-dom";
 import { logOut } from '../firebase/firebaseFunctions';
 import { onAuthStateChanged, User} from "firebase/auth";
 import {auth} from '../firebase/firebaseSetup';
-import {Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemText} from "@mui/material"
+import {
+  Box,
+  Button,
+  Dialog, DialogContent,
+  DialogTitle,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText
+} from "@mui/material"
 import styles from "../styles/home.module.css"
 import ClassThumbnail from "../components/ClassThumbnail"
 
 export default function Home() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+
   const screenAR = window.innerWidth/window.innerHeight;
+
+  const handleLogOut = () => {
+    logOut();
+  }
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <img src={require('../images/logo.png')} className={styles.logo1}></img>
@@ -28,7 +47,7 @@ export default function Home() {
         ))}
       </List>
       <Divider />
-      <Button className={styles.signout} onClick={logOut}>Sign Out</Button>
+      <Button className={styles.signout} onClick={handleLogOut}>Sign Out</Button>
     </Box>
   );
 
@@ -39,6 +58,9 @@ export default function Home() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         user = u;
+        setIsLoggedIn(true);
+        handleCloseLoginDialog();
+
         if (!user.email?.endsWith("athenian.org")) {
           logOut();
           navigate('/signup');
@@ -46,8 +68,8 @@ export default function Home() {
         // ...
       } else {
         // User is signed out
-        navigate('/signup');
-        // ...
+        setIsLoggedIn(false);
+        handleOpenLoginDialog();
       }
     })
   }, []);
@@ -55,10 +77,31 @@ export default function Home() {
   if (screenAR <= 1) {
     subjectRows = [["Art", "Math"],["History", "Science"],["Literature", "Language"],["Computer Science & Engineering", "Other"]];
   }
-  
-  
+
+  const handleCloseLoginDialog = () => {
+    setLoginDialogOpen(false);
+
+  }
+
+  const handleOpenLoginDialog = () => {
+    setLoginDialogOpen(true);
+  }
+
   return (
     <div>
+      <Dialog onClose={(event: object, reason: string) => {
+        if (reason !== "backdropClick") {
+          handleCloseLoginDialog()
+        }
+      }} aria-labelledby="simple-dialog-title"
+              open={loginDialogOpen}>
+        <DialogTitle id="simple-dialog-title">Login to Access Hadrian's Library</DialogTitle>
+        <DialogContent >
+          <Button onClick={() => navigate("/login")}>Login</Button>
+          <Button onClick={() => navigate("/signup")}>Sign Up</Button>
+        </DialogContent>
+      </Dialog>
+
       <div className={styles.title}>
         <div className={styles.logoHolder}>
           <img className={styles.logo2} src={require("../images/logo.png")}></img>
