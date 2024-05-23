@@ -6,6 +6,7 @@ import {storage, db} from "../firebase/firebaseSetup";
 import BackButton from "../components/BackButton";
 import ClassButton from "../components/ClassButton";
 import { collection, getDocs } from "firebase/firestore";
+import {Dialog, DialogTitle, Grid} from "@mui/material";
 export default function SubjectPage() {
   const { subject } = useParams();
   const subjectString = subject as string
@@ -45,6 +46,7 @@ export default function SubjectPage() {
   useEffect(() => {
     getClasses().then(r => console.log(r))
   }, [])
+
   const screenAR = window.innerWidth/window.innerHeight;
   console.log(screenAR);
   const [classWidth, setClassWidth] = useState<any>(window.innerWidth/4);
@@ -68,6 +70,7 @@ export default function SubjectPage() {
       setClassWidth(window.innerWidth/4);
     }
   });
+
   return (
     <div>
       <BackButton path={"/"}/>

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { storage } from '../firebase/firebaseSetup';
-import {ref, uploadBytes, list, listAll, getMetadata} from "firebase/storage";
+import {ref, uploadBytes, list, listAll, getMetadata, getDownloadURL} from "firebase/storage";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
 import Button from "@mui/material/Button";
@@ -136,7 +136,15 @@ export default function ClassNotes() {
           const classDate = metadata?.classDate
           const unit = metadata?.unit
           const uploadedBy = metadata?.uploadedBy
-          return {name: name, fileName: note.name, fullPath: note.fullPath, classDate: classDate, unit: unit, uploadedBy: uploadedBy}
+          let url = "";
+          await getDownloadURL(ref(storage, note.fullPath)).then((downloadUrl) => {
+            if (downloadUrl === undefined) return;
+            url = downloadUrl;
+            console.log(downloadUrl)
+          }).catch((error) => {
+            console.error(error);
+          });
+          return {name: name, fileName: note.name, fullPath: note.fullPath, classDate: classDate, unit: unit, uploadedBy: uploadedBy, downloadUrl: url}
         })
 
         setNotes(await Promise.all(fullNotes))
@@ -288,24 +296,22 @@ export default function ClassNotes() {
           notes.map(note => {
             if (searchText == "" && searchUnit == "") {
               return (
-                <div key={note.name} className={styles.lineHolder}>
-                  <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> 
-                    <p> {note.name} </p>
-                    <p> {note.classDate} </p>
-                    <p> {note.unit} </p>
-                    <p> {note.uploadedBy} </p>
-                  </Button>
+                <div key={note.name}>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
+                  <p> {note.classDate} </p>
+                  <p> {note.unit} </p>
+                  <p> {note.uploadedBy} </p>
+                  <iframe src={note.downloadUrl} title={note.name}/>
                 </div>
               )
             } else if (note.name.toLowerCase().includes(searchText.toLowerCase()) && searchText !== "") {
               return (
-                <div key={note.name} className={styles.lineHolder}>
-                  <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> 
-                    <p>{note.name}</p>
-                    <p>{note.classDate}</p>
-                    <p>{note.unit}</p>
-                    <p>{note.uploadedBy}</p>
-                  </Button>
+                <div key={note.name}>
+                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
+                  <p> {note.classDate} </p>
+                  <p> {note.unit} </p>
+                  <p> {note.uploadedBy} </p>
+                  <iframe src={note.downloadUrl} title={note.name}/>
                 </div>
               )
             } else if (note.unit.toLowerCase().includes(searchUnit.toLowerCase()) && searchUnit !== "") {
@@ -315,10 +321,10 @@ export default function ClassNotes() {
                   <p> {note.classDate} </p>
                   <p> {note.unit} </p>
                   <p> {note.uploadedBy} </p>
+                  <iframe src={note.downloadUrl} title={note.name}/>
                 </div>
               )
-            }
-            else {
+            } else {
               return null
             }
           })}
