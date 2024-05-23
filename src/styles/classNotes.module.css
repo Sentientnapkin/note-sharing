@@ -4,9 +4,13 @@
   object-fit: cover;
 }
 .plus {
-  width: 50px;
-  height: 50px;
-  margin-left: 10px;
+  background-color: #007AFF !important;
+  width: 90px !important;
+  height: 90px !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  margin: 15px !important;
 }
 .titleHolder {
   margin-top: 10px;
@@ -30,6 +34,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between !important;
+}
+.icon{
+  width: 50% !important;
+  height: 50% !important;
 }
 h1 {
   margin: 10px;

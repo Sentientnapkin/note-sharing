@@ -247,10 +247,10 @@ export default function ClassNotes() {
       <img className={styles.headImg} src={require('../images/Class.png')}/>
       <div className={styles.titleHolder}>
         <h1> {classId} </h1>
-        <Fab className={styles.plus} aria-label="add" onClick={handleOpenPopup}>
-          <AddIcon/>
-        </Fab>
       </div>
+      <Fab className={styles.plus} aria-label="add" onClick={handleOpenPopup}>
+          <AddIcon className={styles.icon}/>
+      </Fab>
       <TextField
         onChange={
           (event) => {
@@ -288,20 +288,24 @@ export default function ClassNotes() {
           notes.map(note => {
             if (searchText == "" && searchUnit == "") {
               return (
-                <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
-                  <p> {note.classDate} </p>
-                  <p> {note.unit} </p>
-                  <p> {note.uploadedBy} </p>
+                <div key={note.name} className={styles.lineHolder}>
+                  <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> 
+                    <p> {note.name} </p>
+                    <p> {note.classDate} </p>
+                    <p> {note.unit} </p>
+                    <p> {note.uploadedBy} </p>
+                  </Button>
                 </div>
               )
             } else if (note.name.toLowerCase().includes(searchText.toLowerCase()) && searchText !== "") {
               return (
-                <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
-                  <p> {note.classDate} </p>
-                  <p> {note.unit} </p>
-                  <p> {note.uploadedBy} </p>
+                <div key={note.name} className={styles.lineHolder}>
+                  <Button className={styles.line} onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> 
+                    <p>{note.name}</p>
+                    <p>{note.classDate}</p>
+                    <p>{note.unit}</p>
+                    <p>{note.uploadedBy}</p>
+                  </Button>
                 </div>
               )
             } else if (note.unit.toLowerCase().includes(searchUnit.toLowerCase()) && searchUnit !== "") {
