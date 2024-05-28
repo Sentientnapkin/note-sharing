@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Autocomplete, createFilterOptions,
+  Autocomplete, CircularProgress, createFilterOptions,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,7 +9,6 @@ import {
   Fab, FormControl, InputLabel, MenuItem, Select,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { storage } from '../firebase/firebaseSetup';
 import {ref, uploadBytes, list, listAll, getMetadata, getDownloadURL} from "firebase/storage";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -19,7 +18,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import styles from "../styles/classNotes.module.css"
 import TextField from "@mui/material/TextField";
-import {auth} from "../firebase/firebaseSetup";
+import {auth, db, storage} from "../firebase/firebaseSetup";
+import { doc, setDoc } from "firebase/firestore";
 import NoteButton from '../components/NoteButton';
 
 const filter = createFilterOptions();
@@ -37,13 +37,14 @@ export default function ClassNotes() {
   const [unitValue, setUnitValue] = useState<any | null>("");
   const [openUnitDialog, toggleOpenUnitDialog] = useState(false);
 
+  const [name, setName] = useState<string>("")
+
   const [uploadPopupOpen, setUploadPopupOpen] = useState<boolean>(false);
   const [uploadDate, setUploadDate] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null)
 
   const [searchText, setSearchText] = useState<string>("")
   const [searchUnit, setSearchUnit] = useState<string>("")
-
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -88,20 +89,28 @@ export default function ClassNotes() {
     const metadata = {
       contentType: 'application/pdf',
       customMetadata: {
+        'note_name': name,
         'classDate': uploadDate.toString().slice(0, 16),
         'unit': unitValue,
         'uploadedBy': auth.currentUser?.displayName ?? "Unknown",
       },
     }
 
-    setIsLoading(true)
-
     await uploadBytes(storageRef, file, metadata).then((snapshot) => {
       console.log('Uploaded a blob or file!');
     }).then(() => {
       handleClosePopup()
-      setIsLoading(false)
     })
+
+    await setDoc(doc(db, "users", auth.currentUser?.uid as string, "uploads" ,file.name), {
+      note_name: name,
+      fileName: file.name,
+      unit: unitValue,
+      classDate: uploadDate.toString().slice(0, 16),
+      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue + "/" + file.name,
+    });
+
+    await getNotes().then(() => {})
   }
 
   async function handleOpenPDF(fullPath: any, noteName: any) {
@@ -118,7 +127,11 @@ export default function ClassNotes() {
       .then(async(res) => {
         const allNotes = [];
 
-        setUnits(res.prefixes)
+        const units = []
+        for (let i = 0; i < res.prefixes.length; i++) {
+          units.push(res.prefixes[i].name)
+        }
+        setUnits(units)
 
         for (let i = 0; i < res.prefixes.length; i++) {
           const unit = res.prefixes[i]
@@ -133,7 +146,7 @@ export default function ClassNotes() {
           const metadata = await getMetadata(ref(storage, note.fullPath)).then((metadata) => {
             return metadata.customMetadata
           })
-          const name = note.name.substring(0, note.name.length - 4);
+          const name = metadata?.note_name;
           const classDate = metadata?.classDate
           const unit = metadata?.unit
           const uploadedBy = metadata?.uploadedBy
@@ -209,6 +222,13 @@ export default function ClassNotes() {
           </div>
         </DialogContent>
         <DialogContent>
+          <TextField
+            label={"Name"}
+            onChange={(event) => setName(event.target.value)}
+            defaultValue={""}
+          />
+        </DialogContent>
+        <DialogContent>
           <Autocomplete
             onChange={(event, newValue) => {
               if (newValue && newValue.inputValue) {
@@ -244,7 +264,7 @@ export default function ClassNotes() {
             selectOnFocus
             clearOnBlur
             handleHomeEndKeys
-            renderOption={(props, option) => <li {...props}>{option.name}</li>}
+            renderOption={(props, option) => <li {...props}>{option}</li>}
             sx={{ width: 300 }}
             freeSolo
             renderInput={(params) => <TextField {...params} label="Unit" />}
@@ -283,7 +303,6 @@ export default function ClassNotes() {
           <AddIcon className={styles.icon}/>
       </Fab>
       <TextField
-        className={styles.textField}
         onChange={
           (event) => {
             setSearchText(event.target.value)
@@ -307,7 +326,7 @@ export default function ClassNotes() {
           </MenuItem>
           {units.map((unit) => {
             return (
-              <MenuItem value={unit.name}>{unit.name}</MenuItem>
+              <MenuItem value={unit}>{unit}</MenuItem>
             )
           })}
         </Select>
@@ -315,9 +334,8 @@ export default function ClassNotes() {
 
       <div>
         <h2>Notes</h2>
-        {isLoading && <p>Loading...</p>}
-        {
-          notes.map(note => {
+        {isLoading && <CircularProgress color="inherit" />}
+        {notes.map(note => {
             if (searchText == "" && searchUnit == "") {
               return (
                 <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
