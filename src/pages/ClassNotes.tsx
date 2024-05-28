@@ -46,7 +46,6 @@ export default function ClassNotes() {
   const [searchText, setSearchText] = useState<string>("")
   const [searchUnit, setSearchUnit] = useState<string>("")
 
-
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -85,7 +84,7 @@ export default function ClassNotes() {
   async function handleUploadNote() {
     if (file == null) return
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue + "/" + file.name);
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue + "/" + name);
 
     const metadata = {
       contentType: 'application/pdf',
@@ -103,12 +102,12 @@ export default function ClassNotes() {
       handleClosePopup()
     })
 
-    await setDoc(doc(db, "users", auth.currentUser?.uid as string, "uploads" ,file.name), {
+    await setDoc(doc(db, "users", auth.currentUser?.uid as string, "uploads" ,name), {
       note_name: name,
       fileName: file.name,
       unit: unitValue,
       classDate: uploadDate.toString().slice(0, 16),
-      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue + "/" + file.name,
+      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue + "/" + name,
     });
 
     await getNotes().then(() => {})
@@ -130,9 +129,10 @@ export default function ClassNotes() {
 
         const units = []
         for (let i = 0; i < res.prefixes.length; i++) {
-          units.push(res.prefixes[i].name)
+          units.push({name: res.prefixes[i].name})
         }
         setUnits(units)
+
 
         for (let i = 0; i < res.prefixes.length; i++) {
           const unit = res.prefixes[i]
@@ -155,7 +155,6 @@ export default function ClassNotes() {
           await getDownloadURL(ref(storage, note.fullPath)).then((downloadUrl) => {
             if (downloadUrl === undefined) return;
             url = downloadUrl;
-            console.log(downloadUrl)
           }).catch((error) => {
             console.error(error);
           });
@@ -174,7 +173,6 @@ export default function ClassNotes() {
   }, [getNotes])
 
   const screenAR = window.innerWidth/window.innerHeight;
-  console.log(screenAR);
   const [noteWidth, setNoteWidth] = useState<any>(window.innerWidth/4);
   if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
     setNoteWidth(window.innerWidth/2);
@@ -183,9 +181,7 @@ export default function ClassNotes() {
     setNoteWidth(window.innerWidth/3);
   }
   window.addEventListener('resize', function (event) {
-    console.log('resized');
     const screenAR = window.innerWidth/window.innerHeight;
-    console.log(screenAR);
     if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
       setNoteWidth(window.innerWidth/2);
     }
@@ -265,7 +261,7 @@ export default function ClassNotes() {
             selectOnFocus
             clearOnBlur
             handleHomeEndKeys
-            renderOption={(props, option) => <li {...props}>{option}</li>}
+            renderOption={(props, option) => <li {...props}>{option.name}</li>}
             sx={{ width: 300 }}
             freeSolo
             renderInput={(params) => <TextField {...params} label="Unit" />}
@@ -329,7 +325,7 @@ export default function ClassNotes() {
           </MenuItem>
           {units.map((unit) => {
             return (
-              <MenuItem value={unit}>{unit}</MenuItem>
+              <MenuItem value={unit.name}>{unit.name}</MenuItem>
             )
           })}
         </Select>
@@ -348,7 +344,6 @@ export default function ClassNotes() {
                 <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
               )
             } else if (note.unit.toLowerCase().includes(searchUnit.toLowerCase()) && searchUnit !== "") {
-              const s = "background-image: url(" + note.downloadUrl + ");";
               return (
                 <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
               )

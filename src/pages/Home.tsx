@@ -73,6 +73,7 @@ export default function Home() {
       }
     })
   }, []);
+
   var subjectRows = [["Art", "Math", "History"], ["Science", "Literature", "Language"], ["Computer Science & Engineering", "Other"]];
   if (screenAR <= 1) {
     subjectRows = [["Art", "Math"],["History", "Science"],["Literature", "Language"],["Computer Science & Engineering", "Other"]];
@@ -115,13 +116,13 @@ export default function Home() {
       <div>
         {subjectRows.map((m) => {
           return (
-            <div className={styles.holder}>
+            <div className={styles.holder} key={m[0] + " " + m[1] + " " + m[2]}>
               <ClassThumbnail oClick={() => {
                   navigate('/' + m[0]);
                 }} jClassName={m[0]} numRows={subjectRows.length}/>
               <ClassThumbnail oClick={() => {
                   navigate('/' + m[1]);
-                }} jClassName={m[1]} numRows={subjectRows.length}/>  
+                }} jClassName={m[1]} numRows={subjectRows.length}/>
               {m.length > 2 && 
               <ClassThumbnail oClick={() => {
                   navigate('/' + m[2]);

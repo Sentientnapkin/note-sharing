@@ -1,25 +1,29 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import BackButton from '../components/BackButton';
 import styles from '../styles/profile.module.css';
-import Button from '@mui/material/Button'
 import {CircularProgress, TextField} from '@mui/material';
 import {auth, db, storage} from '../firebase/firebaseSetup';
 import {getDownloadURL, getMetadata, list, listAll, ref, StorageReference} from "firebase/storage";
 import {collection, doc, getDocs, query} from "firebase/firestore";
 import NoteButton from "../components/NoteButton"
 import {useNavigate, useParams} from 'react-router-dom';
+import {onAuthStateChanged, User} from "firebase/auth";
+import {logOut} from "../firebase/firebaseFunctions";
 
 export default function Profile() {
   const navigate = useNavigate()
   const [notes, setNotes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true);
+  let user: User | null = auth.currentUser;
 
   async function getMyUploads() {
     setIsLoading(true)
 
     const allNotes: { name: any; fullPath: any; unit: any; classDate: any; }[] = [];
-    const user = auth.currentUser;
-    if (user === null) return;
+    if (user === null || user === undefined){
+      setIsLoading(false)
+      return;
+    }
     const uid = user.uid;
 
     const q = query(collection(db, "users", uid, "uploads"));
@@ -42,7 +46,6 @@ export default function Profile() {
       await getDownloadURL(ref(storage, note.fullPath)).then((downloadUrl) => {
         if (downloadUrl === undefined) return;
         url = downloadUrl;
-        console.log(downloadUrl)
       }).catch((error) => {
         console.error(error);
       });
@@ -54,18 +57,23 @@ export default function Profile() {
   }
 
   useEffect(() => {
-    getMyUploads().then(() => {})
-  }, [])
+    onAuthStateChanged(auth, (u) => {
+      if (u) {
+        user = u;
+        getMyUploads().then(() => {})
+      }
+    })
+  }, []);
+
   async function handleOpenPDF(fullPath: any, noteName: any) {
-    console.log(fullPath)
     const unit = fullPath.split("/")[3]
     const subject = fullPath.split("/")[1]
     const classId = fullPath.split("/")[2]
-    console.log('/'+ subject + '/'+ classId + '/' + unit + '/' + noteName)
     navigate('/'+ subject + '/'+ classId + '/' + unit + '/' + noteName)
   }
+
+  {/**  Screen Sizing Logic  **/}
   const screenAR = window.innerWidth/window.innerHeight;
-  console.log(screenAR);
   const [noteWidth, setNoteWidth] = useState<any>(window.innerWidth/4);
   if (screenAR <= 0.8 && noteWidth !== window.innerWidth/2) {
     setNoteWidth(window.innerWidth/2);
@@ -85,6 +93,7 @@ export default function Profile() {
       setNoteWidth(window.innerWidth/4);
     }
   });
+
   return (
     <div>
       <BackButton path={"/"}/>
@@ -94,7 +103,7 @@ export default function Profile() {
       {isLoading && <CircularProgress color="inherit" />}
       {notes.map((note) => {
         return (
-          <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
+          <NoteButton wid={noteWidth} notes={note} key={note.name} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
         )
       })}
     </div>
