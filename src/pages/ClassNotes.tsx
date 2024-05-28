@@ -20,6 +20,7 @@ import { styled } from '@mui/material/styles';
 import styles from "../styles/classNotes.module.css"
 import TextField from "@mui/material/TextField";
 import {auth} from "../firebase/firebaseSetup";
+import NoteButton from '../components/NoteButton';
 
 const filter = createFilterOptions();
 
@@ -158,7 +159,29 @@ export default function ClassNotes() {
     getNotes().then(() => {})
   }, [getNotes])
 
-
+  const screenAR = window.innerWidth/window.innerHeight;
+  console.log(screenAR);
+  const [noteWidth, setNoteWidth] = useState<any>(window.innerWidth/4);
+  if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
+    setNoteWidth(window.innerWidth/2);
+  }
+  else if (screenAR <= 1 && screenAR > 0.7 && noteWidth !== window.innerWidth/3) {
+    setNoteWidth(window.innerWidth/3);
+  }
+  window.addEventListener('resize', function (event) {
+    console.log('resized');
+    const screenAR = window.innerWidth/window.innerHeight;
+    console.log(screenAR);
+    if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
+      setNoteWidth(window.innerWidth/2);
+    }
+    else if (screenAR <= 1 && screenAR > 0.7 && noteWidth !== window.innerWidth/3) {
+      setNoteWidth(window.innerWidth/3);
+    }
+    else if (screenAR > 1 && noteWidth !== window.innerWidth/4){
+      setNoteWidth(window.innerWidth/4);
+    }
+  });
   return (
     <div>
       {/** Upload PopUp **/}
@@ -260,6 +283,7 @@ export default function ClassNotes() {
           <AddIcon className={styles.icon}/>
       </Fab>
       <TextField
+        className={styles.textField}
         onChange={
           (event) => {
             setSearchText(event.target.value)
@@ -296,33 +320,16 @@ export default function ClassNotes() {
           notes.map(note => {
             if (searchText == "" && searchUnit == "") {
               return (
-                <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
-                  <p> {note.classDate} </p>
-                  <p> {note.unit} </p>
-                  <p> {note.uploadedBy} </p>
-                  <iframe src={note.downloadUrl} title={note.name}/>
-                </div>
+                <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
               )
             } else if (note.name.toLowerCase().includes(searchText.toLowerCase()) && searchText !== "") {
               return (
-                <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
-                  <p> {note.classDate} </p>
-                  <p> {note.unit} </p>
-                  <p> {note.uploadedBy} </p>
-                  <iframe src={note.downloadUrl} title={note.name}/>
-                </div>
+                <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
               )
             } else if (note.unit.toLowerCase().includes(searchUnit.toLowerCase()) && searchUnit !== "") {
+              const s = "background-image: url(" + note.downloadUrl + ");";
               return (
-                <div key={note.name}>
-                  <Button onClick={() => handleOpenPDF(note.fullPath, note.fileName)}> {note.name} </Button>
-                  <p> {note.classDate} </p>
-                  <p> {note.unit} </p>
-                  <p> {note.uploadedBy} </p>
-                  <iframe src={note.downloadUrl} title={note.name}/>
-                </div>
+                <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
               )
             } else {
               return null
