@@ -6,8 +6,11 @@ import {CircularProgress, TextField} from '@mui/material';
 import {auth, db, storage} from '../firebase/firebaseSetup';
 import {getDownloadURL, getMetadata, list, listAll, ref, StorageReference} from "firebase/storage";
 import {collection, doc, getDocs, query} from "firebase/firestore";
+import NoteButton from "../components/NoteButton"
+import {useNavigate, useParams} from 'react-router-dom';
 
 export default function Profile() {
+  const navigate = useNavigate()
   const [notes, setNotes] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,7 +56,35 @@ export default function Profile() {
   useEffect(() => {
     getMyUploads().then(() => {})
   }, [])
-
+  async function handleOpenPDF(fullPath: any, noteName: any) {
+    console.log(fullPath)
+    const unit = fullPath.split("/")[3]
+    const subject = fullPath.split("/")[1]
+    const classId = fullPath.split("/")[2]
+    console.log('/'+ subject + '/'+ classId + '/' + unit + '/' + noteName)
+    navigate('/'+ subject + '/'+ classId + '/' + unit + '/' + noteName)
+  }
+  const screenAR = window.innerWidth/window.innerHeight;
+  console.log(screenAR);
+  const [noteWidth, setNoteWidth] = useState<any>(window.innerWidth/4);
+  if (screenAR <= 0.8 && noteWidth !== window.innerWidth/2) {
+    setNoteWidth(window.innerWidth/2);
+  }
+  else if (screenAR <= 1.1 && screenAR > 0.8 && noteWidth !== window.innerWidth/3) {
+    setNoteWidth(window.innerWidth/3);
+  }
+  window.addEventListener('resize', function (event) {
+    const screenAR = window.innerWidth/window.innerHeight;
+    if (screenAR <= 0.8 && noteWidth !== window.innerWidth/2) {
+      setNoteWidth(window.innerWidth/2);
+    }
+    else if (screenAR <= 1.1 && screenAR > 0.8 && noteWidth !== window.innerWidth/3) {
+      setNoteWidth(window.innerWidth/3);
+    }
+    else if (screenAR > 1.1 && noteWidth !== window.innerWidth/4){
+      setNoteWidth(window.innerWidth/4);
+    }
+  });
   return (
     <div>
       <BackButton path={"/"}/>
@@ -63,12 +94,7 @@ export default function Profile() {
       {isLoading && <CircularProgress color="inherit" />}
       {notes.map((note) => {
         return (
-          <div key={note.name}>
-            <p>{note.name}</p>
-            <p>{note.classDate}</p>
-            <iframe src={note.downloadUrl} title={note.name}/>
-            <Button variant={"contained"}>View</Button>
-          </div>
+          <NoteButton wid={noteWidth} notes={note} openPDF={() => handleOpenPDF(note.fullPath, note.fileName)}></NoteButton>
         )
       })}
     </div>

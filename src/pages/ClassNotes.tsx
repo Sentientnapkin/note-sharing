@@ -176,21 +176,23 @@ export default function ClassNotes() {
   const screenAR = window.innerWidth/window.innerHeight;
   console.log(screenAR);
   const [noteWidth, setNoteWidth] = useState<any>(window.innerWidth/4);
-  if (screenAR <= 0.8 && noteWidth !== window.innerWidth/2) {
+  if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
     setNoteWidth(window.innerWidth/2);
   }
-  else if (screenAR <= 1.1 && screenAR > 0.8 && noteWidth !== window.innerWidth/3) {
+  else if (screenAR <= 1 && screenAR > 0.7 && noteWidth !== window.innerWidth/3) {
     setNoteWidth(window.innerWidth/3);
   }
   window.addEventListener('resize', function (event) {
+    console.log('resized');
     const screenAR = window.innerWidth/window.innerHeight;
-    if (screenAR <= 0.8 && noteWidth !== window.innerWidth/2) {
+    console.log(screenAR);
+    if (screenAR <= 0.7 && noteWidth !== window.innerWidth/2) {
       setNoteWidth(window.innerWidth/2);
     }
-    else if (screenAR <= 1.1 && screenAR > 0.8 && noteWidth !== window.innerWidth/3) {
+    else if (screenAR <= 1 && screenAR > 0.7 && noteWidth !== window.innerWidth/3) {
       setNoteWidth(window.innerWidth/3);
     }
-    else if (screenAR > 1.1 && noteWidth !== window.innerWidth/4){
+    else if (screenAR > 1 && noteWidth !== window.innerWidth/4){
       setNoteWidth(window.innerWidth/4);
     }
   });
