@@ -84,14 +84,18 @@ export default function ClassNotes() {
   async function handleUploadNote() {
     if (file == null) return
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue.name + "/" + name);
+    if (unitValue.name) {
+      setUnitValue(unitValue.name)
+    }
+
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue + "/" + name);
 
     const metadata = {
       contentType: 'application/pdf',
       customMetadata: {
         'note_name': name,
         'classDate': uploadDate.toString().slice(0, 16),
-        'unit': unitValue.name,
+        'unit': unitValue,
         'uploadedBy': auth.currentUser?.displayName ?? "Unknown",
       },
     }
@@ -105,9 +109,9 @@ export default function ClassNotes() {
     await setDoc(doc(db, "users", auth.currentUser?.uid as string, "uploads" ,name), {
       note_name: name,
       fileName: file.name,
-      unit: unitValue.name,
+      unit: unitValue,
       classDate: uploadDate.toString().slice(0, 16),
-      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue.name + "/" + name,
+      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue + "/" + name,
     });
 
     await getNotes().then(() => {})
@@ -192,6 +196,7 @@ export default function ClassNotes() {
       setNoteWidth(window.innerWidth/4);
     }
   });
+
   return (
     <div>
       {/** Upload PopUp **/}
@@ -299,9 +304,11 @@ export default function ClassNotes() {
       <Fab className={styles.plus} aria-label="add" onClick={handleOpenPopup}>
           <AddIcon className={styles.icon}/>
       </Fab>
+
       <TextField
         label={"Search"}
         className={styles.textField}
+        style={{width: "50%"}}
         onChange={
           (event) => {
             setSearchText(event.target.value)
