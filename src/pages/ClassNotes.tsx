@@ -84,14 +84,14 @@ export default function ClassNotes() {
   async function handleUploadNote() {
     if (file == null) return
 
-    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue + "/" + name);
+    const storageRef = ref(storage, 'notes/' + subject + '/' + classId + '/' + unitValue.name + "/" + name);
 
     const metadata = {
       contentType: 'application/pdf',
       customMetadata: {
         'note_name': name,
         'classDate': uploadDate.toString().slice(0, 16),
-        'unit': unitValue,
+        'unit': unitValue.name,
         'uploadedBy': auth.currentUser?.displayName ?? "Unknown",
       },
     }
@@ -105,9 +105,9 @@ export default function ClassNotes() {
     await setDoc(doc(db, "users", auth.currentUser?.uid as string, "uploads" ,name), {
       note_name: name,
       fileName: file.name,
-      unit: unitValue,
+      unit: unitValue.name,
       classDate: uploadDate.toString().slice(0, 16),
-      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue + "/" + name,
+      fullPath: "notes/" + subject + '/' + classId + '/' + unitValue.name + "/" + name,
     });
 
     await getNotes().then(() => {})
