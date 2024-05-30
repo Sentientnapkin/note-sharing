@@ -63,6 +63,7 @@ export default function ClassNotes() {
   }
 
   function handleClosePopup() {
+    setUploadDate(null)
     setFile(null)
     setUploadPopupOpen(false)
   }

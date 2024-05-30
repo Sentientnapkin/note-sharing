@@ -6,7 +6,7 @@ import {storage, db} from "../firebase/firebaseSetup";
 import BackButton from "../components/BackButton";
 import ClassButton from "../components/ClassButton";
 import { collection, getDocs } from "firebase/firestore";
-import {Dialog, DialogTitle, Grid} from "@mui/material";
+
 export default function SubjectPage() {
   const { subject } = useParams();
   const subjectString = subject as string
