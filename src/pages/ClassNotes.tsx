@@ -225,6 +225,11 @@ export default function ClassNotes() {
           </div>
         </DialogContent>
         <DialogContent>
+          <p>
+            Only PDFs can be uploaded
+          </p>
+        </DialogContent>
+        <DialogContent>
           <TextField
             label={"Name"}
             onChange={(event) => setName(event.target.value)}
